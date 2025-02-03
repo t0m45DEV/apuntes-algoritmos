@@ -1,0 +1,311 @@
+\documentclass{article}
+\usepackage{graphicx} % Imagenes
+\usepackage{amssymb} % Operadores logicos
+\usepackage[makeroom]{cancel} % Para tachar simbolitos
+\usepackage{multicol} % Muchas columnas
+\usepackage[margin=3cm]{geometry} % Margenes
+\usepackage{amsmath}
+
+\input{Funciones}
+
+\begin{document}
+\thispagestyle{empty}
+
+\section*{Estructuras y complejidades}
+
+\begin{multicols}{2}
+
+\begin{center}
+	\begin{large}Lista Enlazada\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		listaVacía & $O(1)$ \\
+		longitud & $O(1)$ \\
+		vacía & $O(1)$ \\
+		agregarAdelante & $O(cp(e))$ \\
+		agregarAtras & $O(cp(e))$ \\
+		fin & $O(1)$ \\
+		comienzo & $O(1)$ \\
+		primero & $O(1)$ \\
+		ultimo & $O(1)$ \\
+		\hline
+		obtener & $O(n)$ \\
+		eliminar & $O(n)$ \\
+		modificarPosicion & $O(n + cp(e))$ \\
+		concatenar & $O(m * cp(e))$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Pila Sobre Lista\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		pilaVacía & $O(1)$ \\
+		vacía & $O(1)$ \\
+		encolar & $O(cp(e))$ \\
+		desencolar & $O(1)$ \\
+		tope & $O(1)$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Cola Sobre Lista\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		colaVacía & $O(1)$ \\
+		vacía & $O(1)$ \\
+		encolar & $O(cp(e))$ \\
+		desencolar & $O(1)$ \\
+		proximo & $O(1)$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Vector\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		vectorVacío & $O(1)$ \\
+		longitud & $O(1)$ \\
+		vacía & $O(1)$ \\
+		agregarAdelante & $O(f(n) + cp(e))$ \\
+		agregarAtras & $O(f(n) + cp(e))$ \\
+		fin & $O(n)$ \\
+		comienzo & $O(n)$ \\
+		primero & $O(1)$ \\
+		ultimo & $O(1)$ \\
+		\hline
+		obtener & $O(1)$ \\
+		eliminar & $O(n)$ \\
+		modificarPosicion & $O(1)$ \\
+		concatenar & $O(m)$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Conjunto Lineal\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		conjVacío & $O(1)$ \\
+		tamaño & $O(1)$ \\
+		pertenece & $O(n * eq(T))$ \\
+		agregar & $O(n * eq(T) + cp(e))$ \\
+		agregarRapido & $O(cp(e))$ \\
+		sacar & $O(n * eq(T))$ \\
+		unir & $O(n * m * cp(T) * eq(T))$ \\
+		restar & $O(n * m * eq(T))$ \\
+		intersecar & $O(n * m * eq(T))$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Conjunto Log\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		conjVacío & $O(1)$ \\
+		tamaño & $O(1)$ \\
+		pertenece & $O(\log n * eq(T))$ \\
+		agregar & $O(\log n * eq(T) + cp(e))$ \\
+		agregarRapido & $O(\log n * eq(T) + cp(e))$ \\
+		sacar & $O(\log n * eq(T))$ \\
+		unir & $O((n + m)\log (n + m) * cp(T) * eq(T))$ \\
+		restar & $O((n + m)\log (n + m) * eq(T))$ \\
+		intersecar & $O((n + m)\log (n + m) * cp(T) * eq(T))$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Conjunto Digital\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		conjVacío & $O(1)$ \\
+		tamaño & $O(1)$ \\
+		pertenece & $O(|e| * |a|)$ \\
+		agregar & $O(|e| * |a| * eq(a) + cp(e))$ \\
+		agregarRapido & $O(|e| * |a| * eq(a) + cp(e))$ \\
+		sacar & $O(|e| * |a| * eq(a))$ \\
+		unir & $O(m * max(c2) * |a| * eq(a))$ \\
+		restar & $O(n * m * |a|)$ \\
+		intersecar & $O(n * max(c1) * m * max(c2))$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Diccionario Lineal\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		dictVacío & $O(1)$ \\
+		está & $O(n)$ \\
+		definir & $O(n * eq(K) + cp(k) + cp(v))$ \\
+		definirRapido & $O(n * eq(K) + cp(k) + cp(v))$ \\
+		obtener & $O(n)$ \\
+		borrar & $O(n)$ \\
+		tamaño & $O(1)$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Diccionario Log\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		dictVacío & $O(1)$ \\
+		está & $O(\log n * eq(K))$ \\
+		definir & $O(\log n * eq(K) + cp(k) + cp(v))$ \\
+		definirRapido & $O(\log n * eq(K) + cp(k) + cp(v))$ \\
+		obtener & $O(\log n * eq(K))$ \\
+		borrar & $O(\log n * eq(K))$ \\
+		tamaño & $O(1)$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\begin{center}
+	\begin{large}Diccionario Digital\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Operación} & \textbf{Complejidad} \\
+		\hline
+		dictVacío & $O(1)$ \\
+		está & $O(|k| * |a| * eq(a))$ \\
+		definir & $O(|k| * |a| * eq(a) + cp(k) + cp(v))$ \\
+		definirRapido & $O(|k| * |a| * eq(a) + cp(k) + cp(v))$ \\
+		obtener & $O(|k| * |a| * eq(a))$ \\
+		borrar & $O(|k| * |a| * eq(a))$ \\
+		tamaño & $O(1)$ \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\end{multicols}
+
+\begin{center}
+	\begin{large}Referencias\end{large}
+	\vspace*{2mm}
+	
+	\begin{tabular}{|c|c|}
+		\hline
+		\textbf{Nombre} & \textbf{Explicacion} \\
+		\hline
+		$n$ & Cantidad de elementos de la estructura \\
+		\hline
+		$m$ & Cantidad de elementos de una segunda estructura \\
+		\hline
+		$cp(e)$ & Costo de copiar el elemento $e$ \\
+		\hline
+		$f(n)$ &  \formula{f(n) = 
+    				\begin{cases}
+    					n &\quad\text{si } n = 2^{k} \text{para algún k}\\
+    					1 &\quad\text{en caso contrario} 
+    				\end{cases}}\\
+		\hline
+		$eq(T)$ & Costo de comparar elementos de tipo $T$ \\
+		\hline
+		$cp(T)$ & Costo de copiar elementos de tipo $T$ \\
+		\hline
+		$max(c1)$ & La clave mas grande del primer conjunto \\
+		\hline
+		$max(c2)$ & La clave mas grande del segundo conjunto \\
+		\hline
+		$eq(K)$ & Costo de comparar claves definidas en el diccionario \\
+		\hline
+		$cp(k)$ & Costo de copiar la clave \\
+		\hline
+		$cp(v)$ & Costo de copiar el valor \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\section*{Sorting}
+
+\begin{center}
+	\begin{large}Algoritmos de ordenamiento\end{large}
+	\vspace*{2mm}
+
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\textbf{Nombre} & \textbf{Mejor caso} & \textbf{Caso promedio} & \textbf{Peor caso} & \textbf{Es estable} \\
+		\hline
+		\textit{Selection} & \formula{O(n^{2})} & \formula{O(n^{2})} & \formula{O(n^{2})} & No\\
+		\hline
+		\textit{Insertion} & \formula{O(n)} & \formula{O(n^{2})} & \formula{O(n^{2})} & Si\\
+		\hline
+		\textit{Merge} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & Si\\
+		\hline
+		\textit{Quick} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & \formula{O(n^{2})} & No\\
+		\hline
+		\textit{Bubble} & \formula{O(n)} & \formula{O(n^{2})} & \formula{O(n^{2})} & Si\\
+		\hline
+		\textit{Heap} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & No\\
+		\hline
+	\end{tabular}
+\end{center}
+
+\section*{TADs}
+
+\begin{center}\begin{large}Invariante de representación y Función de abstracción\end{large}\end{center}
+	\vspace*{2mm}
+
+\begin{pred}{invRep}{\variable[\In]{implementacion}{\texttt{ImplementacionDeTad}}}
+	Todas las condiciones que las variables deban cumplir para que tu implementacion sea valida
+\end{pred}
+
+\begin{proc}{funAbs}{\variable[\In]{implementacion}{\texttt{ImplementacionDeTad}}, \variable[\Out]{instanciaDeTad}{\texttt{Tad}}}
+	Describir todos los observadores del TAD en base a las variables de tu implementacion (no hace falta usarlas todas, pero si abarcar al TAD completo)
+\end{proc}
+
+\thispagestyle{empty}
+\end{document}

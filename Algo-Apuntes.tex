@@ -1,0 +1,2647 @@
+\documentclass{article}
+\usepackage{graphicx} % Imagenes
+\usepackage{amssymb} % Operadores logicos
+\usepackage[makeroom]{cancel} % Para tachar simbolitos
+\usepackage{multicol} % Muchas columnas
+\usepackage[margin=3cm]{geometry} % Margenes
+\usepackage{amsmath}
+
+\input{Funciones}
+
+\begin{document}
+\pagenumbering{Roman}
+
+\title{ALGORITMOS Y ESTRUCTURAS DE DATOS}
+\author{Tomas Lisazo}
+\date{2023}
+
+\maketitle
+
+\begin{center}
+\begin{large}
+Apuntes y resumen de la materia
+\end{large}
+\end{center}
+
+\newpage
+\renewcommand{\contentsname}{Indice}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{3}
+
+\section{Lógica}
+
+\subsection{Lógica proposicional}
+
+La lógica proposicional es un sistema de lógica basado en fórmulas estructuradas con ciertos simbolos, siguiendo una semantica y una sintactica clara, y que indica el valor de verdad de la misma. El objeto mas basico de la lógica proposicional es una fórmula atomica, que solemos notar con letras.
+
+Por ejemplo, $p$ puede ser un predicado, y puede significar \textit{esta lloviendo}. En particular, $p$ puede ser cierto o puede no serlo, propiedad que describimos como \textit{valor de verdad}. Este valor de verdad puede ser o bien $True$ (verdadero, en ingles), o bien $False$ (falso, en ingles). Continuando con el ejemplo, si ahora mismo esta lloviendo, entonces $p$ es verdad, tiene un valor de verdad de $True$. Por otro lado, si no esta lloviendo cuando usted está leyendo esto, entonces $p$ sera falso, y tendria un valor de verdad de $False$.
+
+Nosotros vamos a trabajar con una serie de simbolos que nos van a permitir unir fórmulas atomicas para armar estructuras mas complejas. Especificamente, veremos:
+
+\begin{multicols}{3}
+\begin{itemize}
+	\item o lógico
+	\item y lógico
+	\item Implicacion
+	\item Doble implicacion
+	\item Negación lógica
+\end{itemize}
+\end{multicols}
+
+A su vez, estos operadores tienen una logica muy basica, basada en las tablas de verdad, que nos indican como funcionan y alteran los valores de verdad en cada caso. Las tablas son, dados $p$ y $q$ fórmulas cualesquiera:
+
+\begin{center}
+\begin{tabular}{c c c}
+\begin{tabular}{|c|c|}
+
+	\multicolumn{2}{c}{\textbf{Negación}} \\
+
+	\hline
+	$p$ & $\neg p$\\
+	\hline
+    T & F\\
+	\hline
+    F & T\\
+    \hline
+\end{tabular} &
+
+\begin{tabular}{|c|c|c|}
+
+	\multicolumn{3}{c}{\textbf{o lógico}} \\
+
+	\hline
+	$p$ & $q$ & $p \lor q$\\
+	\hline
+    T & T & T\\
+	\hline
+    F & T & T\\
+    \hline
+    T & F & T\\
+    \hline
+    F & F & F\\
+    \hline
+\end{tabular} &
+
+
+\begin{tabular}{|c|c|c|}
+
+	\multicolumn{3}{c}{\textbf{y lógico}} \\
+
+	\hline
+	$p$ & $q$ & $p \land q$\\
+	\hline
+    T & T & T\\
+	\hline
+    F & T & F\\
+    \hline
+    T & F & F\\
+    \hline
+    F & F & F\\
+    \hline
+\end{tabular}
+\end{tabular}
+
+\vspace*{4mm}
+
+\begin{tabular}{c c}
+\begin{tabular}{|c|c|c|}
+
+	\multicolumn{3}{c}{\textbf{Implicacion}} \\
+
+	\hline
+	$p$ & $q$ & $p \longrightarrow q$\\
+	\hline
+    T & T & T\\
+	\hline
+    F & T & T\\
+    \hline
+    T & F & F\\
+    \hline
+    F & F & T\\
+    \hline
+\end{tabular} &
+
+
+\begin{tabular}{|c|c|c|}
+
+	\multicolumn{3}{c}{\textbf{Doble implicacion}} \\
+
+	\hline
+	$p$ & $q$ & $p \longleftrightarrow q$\\
+	\hline
+    T & T & T\\
+	\hline
+    F & T & F\\
+    \hline
+    T & F & F\\
+    \hline
+    F & F & T\\
+    \hline
+\end{tabular} \\
+
+\end{tabular}
+\end{center}
+
+Con estas simples reglas, podemos formar fórmulas como $(p \land q) \longrightarrow r$ (leasé: \textit{los valores de verdad de p y q en conjunto, implican la veracidad de r}).
+
+Nos interesan mucho, en particular, lo que son las equivalencias. En particular, ser capaces de determinar si dos o mas fórmulas son equivalentes entre si. Decimos que esto sucede, cuando tienen exactamente los mismos valores de verdad. La equivalencia se suele notar con la doble implicacion. De este modo, podemos decir cosas como:
+
+\begin{multicols}{2}
+	\begin{itemize}
+		
+		\item $(p \lor p) \longleftrightarrow p$
+		\item $(p \land p) \longleftrightarrow p$
+
+		\item $(p \lor q) \lor r \longleftrightarrow p \lor (q \lor r)$
+		\item $(p \land q) \land r \longleftrightarrow p \land (q \land r)$
+
+		\item $(p \lor q) \longleftrightarrow (q \lor p)$
+		\item $(p \land q) \longleftrightarrow (q \land p)$
+		
+		\item $p \land (q \lor r) \longleftrightarrow (p \land q) \lor (p \land r)$
+		\item $p \lor (q \land r) \longleftrightarrow (p \lor q) \land (p \lor r)$
+		
+		\item $\neg (p \land q) \longleftrightarrow \neg p \lor \neg q$
+		\item $\neg (p \lor q) \longleftrightarrow \neg p \land \neg q$
+		
+		\item $(p \longrightarrow q) \longleftrightarrow (\neg p \lor q)$
+		
+	\end{itemize}
+\end{multicols}
+
+Todas estas son propiedades super utiles y practicas, asi que recomiendo tenerlas a mano.
+
+Existe otra cuestion mas, que son las valuaciones. Una valuacion es una funcion $v : \nu \longrightarrow \{ T, F\}$, es decir, toma como entrada una fórmula, y devuelve su valor de verdad. Lo notamos $v \models p$, que se leeria como $v(p) = T$. En caso contrario, diriamos $v \cancel{\models} p$, que significa $v(p) = F$.
+
+De aca, las reglas antes mencionadas son deducibles, pero aca estan explicadas para mas accesibilidad:
+
+
+\begin{itemize}
+	\item $v \models \neg p$ si y solo si $v \cancel{\models} p$
+	
+	\item $v \models (p \lor q)$ si y solo si $v \models p$ o $v \models q$
+	\item $v \models (p \land q)$ si y solo si $v \models p$ y $v \models q$
+	
+	\item $v \models (p \longrightarrow q)$ si y solo si $v \cancel{\models} p$ o $v \models q$
+	\item $v \models (p \longleftrightarrow q)$ si y solo si ($v \models p$ si y solo si $v \models q$)	
+\end{itemize}
+
+Llamamos \textit{tautologías} a aquellas fórmulas lógicas $p$ que para toda valuacion $v$, se cumple $v \models p$. A su vez, existen las \textit{contradicciones}, las cuales son todas las fórmulas lógicas $p$ para las que todas las valuaciones $v$ se cumple que $v \cancel{\models} p$.
+
+Analogamente, decimos que una fórmula lógica es \textit{satisfacible} si existe por lo menos una valuacion $v$ tal que $v \models p$. Finalmente, decimos que una formula es  \textit{insatisfacible}, cuando no es satisfacible.
+
+\subsection{Lógica trivaluada secuencial}
+
+Existen ciertas cuestiones que no podemos representar en un modelo de $verdadero$ y $falso$. Por ejemplo, si tenemos un predicado $P(n)$, que dice que dado un numero $n$, $p$ resulta cierta si y solo si $n=2$.
+
+Existe un problema, y es que no siempre podemos caer en numeros que podamos comparar. Si nos ingresan numeros naturales, o incluso reales, o yendo al caso, hasta complejos, no tendremos ningun problema. También podrian ingresar fórmulas matematicas, y no deberia haber ningun contratiempo a primera vista, pero si que lo hay. Vean en la tabla lo que sucede en el ultimo caso: estamos dividiendo por 0, lo cual esta prohibido en las matematicas. O bueno, mas que prohibido, no definido, porque lleva a contradicciones.
+
+\begin{center}
+\begin{tabular}{|c|c|}
+	\hline
+	$n$ & $P(n)$ \\
+	\hline
+	1 & F \\
+	\hline
+	2 & T \\
+	\hline
+	3 & F \\
+	\hline
+	4 / 2 & T \\
+	\hline
+	1 / 0 & ??? \\
+	\hline
+\end{tabular}
+\end{center}
+
+Es para este tipo de casos que necesitamos ampliar nuestro sistema lógico. Evidentemente, no podemos abarcar todas las fórmulas simplemente con $verdadero$ y $falso$, asi que se creo un sistema nuevo: la lógica trivaluada, que como dice su nombre, tiene tres valores de verdad. Ahora vamos a contar con $verdadero$ y $falso$, como siempre, pero también con $indefinido$, notado a veces por el simbolo $\perp$.
+
+Ahora, podemos definir la operacion de antes, resultando en que $P(1/0)$ es $indefinido$. A causa del nuevo valor, tenemos que actualizar las tablas de verdad, y revisitar las reglas de los simbolos para que todo tenga coherencia con lo antes dicho. Para esto mismo, vamos a introducir el concepto de \textit{lógica trivaluada secuencial}.
+
+La primera parte ya la conocemos, es la lógica trivaluada de la que venimos hablando. Pero la ultima parte, la de \textit{secuencial}, es la que mas interesante vuelve todo esto. Ahora ya no evaluaremos las fórmulas de manera conmutativa, de ahora en adelante, el orden de las operaciones nos sera sumamente relevante. Vamos a tener nuevos simbolos que se tengan que leer estrictamente de izquierda a derecha, que notaremos con una L pequeña junto a los simbolos clasicos, y llamaremos \textit{luego}. Por ejemplo, al \textit{o lógico} nuevo, lo llamaremos \textit{o luego}, y lo notaremos $\lor_{L}$.
+
+Las tablas revisitadas quedarian:
+
+\begin{center}
+\begin{tabular}{c c}
+
+	\begin{tabular}{|c|c|c|}
+		\multicolumn{3}{c}{\textbf{o lógico}} \\
+
+		\hline
+		$p$ & $q$ & $p \lor_{L} q$\\
+		\hline
+    	T & T & T\\
+		\hline
+    	F & T & T\\
+    	\hline
+    	T & F & T\\
+    	\hline
+    	F & F & F\\
+    	\hline
+    	T & $\perp$ & T\\
+		\hline
+    	F & $\perp$ & $\perp$\\
+    	\hline
+    	$\perp$ & T & $\perp$\\
+    	\hline
+    	$\perp$ & F & $\perp$\\
+	    \hline
+   		$\perp$ & $\perp$ & $\perp$\\
+    	\hline
+	\end{tabular}
+
+&
+
+	\begin{tabular}{|c|c|c|}
+		\multicolumn{3}{c}{\textbf{y lógico}} \\
+
+		\hline
+		$p$ & $q$ & $p \land_{L} q$\\
+		\hline
+    	T & T & T\\
+		\hline
+    	F & T & T\\
+    	\hline
+    	T & F & T\\
+    	\hline
+    	F & F & F\\
+    	\hline
+    	T & $\perp$ & $\perp$\\
+		\hline
+    	F & $\perp$ & F\\
+    	\hline
+    	$\perp$ & T & $\perp$\\
+    	\hline
+    	$\perp$ & F & $\perp$\\
+    	\hline
+	    $\perp$ & $\perp$ & $\perp$\\
+    	\hline
+	\end{tabular} \\
+
+\end{tabular}
+\end{center}
+
+\subsection{Sistema deductivo}
+
+Ahora bien, todo excelente con este sistema de lógica y demas, pero no nos sirve de nada si no podemos relacionar fórmulas diferentes. Es decir, si siempre hablamos de cosas independientes, no vamos a llegar muy lejos. Es por eso que existen los \textit{sistemas deductivos}, en los que buscamos \textit{probar} una fórmula en particular, a la que llamaremos \textit{conclusión}, en base a unas otras, a las que llamaremos \textit{premisas}.
+
+Una forma de notar todo esto es la siguiente:
+
+\begin{center}
+\begin{tabular}{c}
+	
+	$p_{1} p_{2} \ldots p_{n}$\\
+	\hline
+	$q$\\
+
+\end{tabular}
+\textit{Regla deductiva}
+
+\end{center}
+
+Donde el conjunto $p_{1} p_{2} \ldots p_{n}$ son las $n$ premisas, y $q$ es nuestra conclusión. A su vez, en lugar de \textit{regla deductiva}, nosotros notariamos el nombre de la regla utilizada.
+
+Llamaremos prueba a una secuencia de reglas lógicas aplicadas sucesivamente para llegar a alguna conclusión. En base a esto, deducimos el \textit{secuente}, que notamos:
+
+\centrado{$p_{1} , p_{2} , \ldots , p_{n} \vdash q$}
+
+Leasé el conjunto de premisas $\{ p_{1},p_{2}, \ldots, p_{n} \}$ con el que podemos obtener una prueba de $q$. Consideramos valido al secuente si podemos construir de manera satisfactoria esa prueba.
+
+Ahora que aclaramos todo esto, podemos pasar a lo pesado. Resulta que la eleccion de estas reglas lógicas es muy importante, ya que solo deberiamos ser capaces de construir pruebas validas. Es decir, no podemos permitirnos la posibilidad de satisfacer pruebas a conclusiones erroneas.
+
+En particular, y de forma muy resumida, tenemos las siguientes reglas:
+
+\begin{center}
+\begin{multicols}{3}
+
+	\begin{tabular}{c}
+	
+		\\
+		\hline
+		$p$\\
+
+	\end{tabular}
+	\textit{Hyp}
+
+	\begin{tabular}{c c}
+	
+		$p$ & $q$\\
+		\hline
+		\multicolumn{2}{c}{$p \land q$} \\
+
+	\end{tabular}
+	$\land i$
+
+	\begin{tabular}{c}
+	
+		$p \land q$\\
+		\hline
+		$p$\\
+
+	\end{tabular}
+	$\land e$
+
+	\begin{tabular}{c}
+	
+		$p$\\
+		\hline
+		$\neg \neg p$\\
+
+	\end{tabular}
+	$\neg \neg i$
+
+	\begin{tabular}{c}
+	
+		$\neg \neg p$\\
+		\hline
+		$p$\\
+
+	\end{tabular}
+	$\neg \neg e$
+
+	\begin{tabular}{c}
+	
+		$p$\\
+		\hline
+		$p \lor q$\\
+
+	\end{tabular}
+	$\lor e$
+
+	\begin{tabular}{c c}
+	
+		$p$ & $p \longrightarrow q$\\
+		\hline
+		\multicolumn{2}{c}{$q$} \\
+
+	\end{tabular}
+	$\longrightarrow e$
+
+	\begin{tabular}{c}
+	
+		\begin{tabular}{|c|}
+			\hline
+			$p_{n}$\\
+			$\vdots$\\
+			$q$\\
+			\hline
+		\end{tabular} \\
+		\hline
+		$p \longrightarrow q$\\
+
+	\end{tabular}
+	$\longrightarrow i, n$
+
+\end{multicols}
+\end{center}
+
+Donde $i$ significa \textit{introduccion} y $e$ \textit{eliminacion}. Estos son solo algunas de las reglas que existen en casi cualquier sistema deductivo. Hay muchas mas que se pueden deducir de estas o incluso crear algunas mas especificas, como el \textit{Modus tollens}.
+
+Dandole un cierre a todo esto, vamos a definir unos terminos más. Llamaremos \textit{teorema} a toda fórmula lógica $p$ tal que el secuente $\vdash p$ es válido.
+
+\small{ \textit{Nota del autor: Son todas muy intuitivas y, en general, cosas que ya se saben, simplemente se les pusieron nombres rimbombantes. Recordar no entrar en panico a la hora de intentar decifrar los simbolos raros de todo este capitulo.}}
+
+\subsection{Lógica de primer orden}
+
+Finalmente, llegamos a la parte final: la \textit{lógica de primer orden}, o la lógica de predicados. Empecemos por un ejemplo, que va a ser mas fácil. Consideremos la frase:
+
+\centrado{\textit{Todo estudiante es más joven que algún profesor}}
+
+Si siguieramos con la lógica proposicional seguro llamariamos a la frase $p$, o cualquier otra letra de preferencia, y le asignariamos algun valor de verdad. Pero quizas con eso perdemos informacion, podriamos armar expresiones mas pequeñas, que engloben un concepto muy especifico, y reconstruir la fórmula original mas compleja. Por mencionar una forma de hacerlo, ya que hay infinitas, aca mostramos:
+
+\centrado{\textit{Ser estudiante}}
+
+\centrado{\textit{Ser profesor}}
+
+\centrado{\textit{Ser más joven que}}
+
+Podemos plantearlo como funciones. Vamos a llamar a nuestras variables \textit{individuos}, es decir, entidades indivisibles y distintiva. En nuestro ejemplo, los \textit{individuos} serian los estudiantes y los profesores, o las personas yendo al caso.
+
+A su vez, vamos a tener \textit{predicados}, que son funciones que toman por entrada individuos, hacen alguna operacion y devuelven el estado de verdad de la operacion hecha. Continuando con la frase, podemos tener un \textit{predicado} que sea $E(x)$, que toma individuos $x$ y nos informa si ese individuo es un estudiante o no. Por otro lado, podemos tener un $P(x)$, que de manera semejante nos informa si el individuo $x$ es un profesor. También podemos tener predicados mas complejos, que tomen dos o mas entradas, por ejemplo podriamos definir $J(x, y)$, que dado un individuo $x$ y un individuo $y$, nos indica si $x$ es mas joven que $y$.
+
+Por ultimo, vamos a introducir el concepto de los cuantificadores. Estos son simbolos que nos van a hacer mas facil la escritura de las fórmulas. En particular, tenemos dos: el \textit{para todo}, que notamos $\forall$; y el \textit{Existe} (también llamado \textit{para algún}), y que notamos $\exists$.
+
+Con todo esto en la mesa, vamos a poder constuir estructuras complejas como la frase de antes, sin perder ninguna informacion primordial. Utilizando nuestros ejemplos de antes, una fórmula equivalente a la frase podria ser:
+
+\centrado{$\forall x (E(x) \longrightarrow (\exists y (P(y) \land J(x, y))))$}
+
+Esta no es la unica fórmula que se puede constuir y tener el mismo significado. Podriamos haber usado otros prodicados, o ordenarla de manera diferente, el punto es que ahora la frase es inequivoca y no hay informacion que se pueda perder, que es lo que mas nos interesa.
+
+En general, a la hora de usar cuantificadores, vamos a escribirlos \textit{tipados}. Esto quiere decir, que vamos a requerir que la variable sea de algun tipo especifico. Lo notamos:
+
+\begin{multicols}{2}
+	\centrado{$\forall x : T$}
+	
+	\centrado{$\exists x : T$}
+\end{multicols}
+
+Que se leerian como \textit{para todo x del tipo T}, y \textit{existe algún x del tipo T}, respectivamente. Si llamamos $H$ al tipo \textit{humano}, la fórmula original podriamos corregirla:
+
+\centrado{$(\forall x : H)(E(x) \longrightarrow ((\exists y : H)(P(y) \land J(x, y))))$}
+
+Existen un par de reglas utiles a la hora de trabajar con los cuantificadores. Primero es lo que sucede al usar la negacion en los mismos. Resulta que, si negamos un cuantificador universal, obtenemos un cuantificador existencial pero con el predicado negado, y viceversa. Todo esto quiere decir que:
+
+\centrado{$\neg (\forall n)(P(n)) \longleftrightarrow (\exists n)(\neg P(n))$}
+\centrado{$\neg (\exists n)(P(n)) \longleftrightarrow (\forall n)(\neg P(n))$}
+
+Lo cual es una regla muy util y practica, pero no la unica. También hay formas de generalizar fórmulas: en particular, decimos que un cuantificador universal generaliza la conjuncion, y un cuantificador existencial generaliza la disyuncion. Es decir:
+
+\centrado{$(\forall n : \mathbb{Z})(P(n)) \longleftrightarrow P(1) \land P(2) \land P(3) \ldots$}
+\centrado{$(\exists n : \mathbb{Z})(P(n)) \longleftrightarrow P(1) \lor P(2) \lor P(3) \ldots$}
+
+En el mundo de la lógica de primer orden, existen unas claras reglas sintacticas que todo LPO (lenguaje de primer orden) debe seguir. En particular, requiere:
+
+\begin{itemize}
+	
+	\item Un conjunto $F$ de \textit{símbolos de función} cada uno con aridad (cantidad de argumentos) $n>0$: $f_{1}$, $f_{2}$, $f_{3}$, $\ldots$, $f_{n}$
+	
+	\item Un conjunto numberable $C$ de \textit{constantes}: $c_{0}$, $c_{1}$, $\ldots$
+	
+	\item Un conjunto $P$ de \textit{símbolos de predicado} cada uno con aridad $n \geq 0$: $p_{1}$, $p_{2}$, $p_{3}$, $\ldots$, $p_{m}$, $\doteq$
+
+\end{itemize}
+
+El simbolo $\doteq$ denotará igualdad.
+
+A su vez, llamamos \textit{terminos} al conjunto de todas las constantes y variables dentro del LPO. Las fórmulas atomicas son todo símbolo de predicado con aridad 0. Finalmente, les decimos fórmulas a todas las fórmulas atomicas dentro del LPO, y todas las que puedas formar con las operaciones lógicas antes vistas.
+
+Combinando esto con los cuantificadores, tenemos los conceptos de \textit{variable libre} y \textit{variable ligada}, que a primera vista no parecen ser de mucho interes pero resultan ser mas que utiles. En particular, llamamos \textit{variable ligada} a una ocurrencia de $x$ si forma parte de una fórmula del tipo $\forall x$ o $\exists x$. Contrariamente, decimos que $x$ es una \textit{variable libre} si no es ligada.
+
+Existe una operacion mas que todavia no mencionamos: la sustitución. Dada una variable $x$, un término $t$, y una fórmula $p$, notamos $p \{ t / x \}$ a la fórmula que se obtiene de reemplazar cada ocurrencia libre de $x$ en $p$ por $t$ (evitando capturas). Por ejemplo, algunas aplicaciones serian:
+
+\begin{itemize}
+	\item $P(x, y) \{ x/w \} = P(w, y)$	
+	\item $(\exists z (P(x, y))) \{ x/w \} = \exists z (P(w, y)))$	
+	\item $(\exists x (P(x, y))) \{ x/w \} = \exists x (P(x, y)))$
+\end{itemize}
+
+Ahora bien, dado cualquier lenguaje de primer orden \textsc{L}, su estructura, llamemosla \texttt{M}, es un par
+
+\centrado{\texttt{M} $= (M, I)$}
+
+donde \textit{M} es un conjunto no vacío al que llamamos \textit{universo}; e \textit{I} es la \textit{función de interpretación}, que es la encargada de asignar funciones y predicados sobre \textit{M} a símbolos de \textsc{L}, siguiendo las siguientes reglas:
+
+\begin{itemize}
+	\item Para toda constante \textit{c}, se tiene que $I(c) \in M$
+	\item Para toda \textit{f} de aridad $n > 0$, se tiene que $I(f) : M^{n} \longrightarrow M$
+	\item Para todo predicado \textit{P} de aridad $n \geq 0$, se tiene que $I(P) \subseteq M$
+	\item $I(\doteq)$ es la relación de identidad sobre \textit{M}
+\end{itemize}
+
+Con esto de la estructura podemos terminar de definir conceptos importantes para mas adelante. En particular, dado un lenguaje \textsc{L} y su estructura \texttt{M}, decimos que $s$ es una \textit{asignación} si $s$ es una función $s : V \longrightarrow M$. A su vez, notamos como $s \models$ \texttt{M} $p$ al hecho de que la asignación $s$ satisface la fórmula $p$ bajo la estructura \texttt{M}.
+
+Notemos que $p$ podria ser cualquier predicado, es decir, que podemos cambiar en la fórmula anterior cualquier estructura lógica. Podriamos decir $s \models$ \texttt{M} $p \land q$, que significa \textit{s satisface tanto p como q, bajo la estructura de primer orden} \texttt{M}.
+
+Finalmente, decimos que una fórmula $p$ es válida o verdadera en \texttt{M} si y solo si se verifica que $s \models$ \texttt{M} $p$ para toda asignación $s$.
+
+Para terminar este capitulo, mostraremos unas reglas algo complejas pero muy utiles. Las reglas del sistema deductivo para los cuantificadores universales y existenciales. En particular son:
+
+\begin{center}
+\begin{multicols}{2}
+
+\begin{tabular}{c}
+	
+	$p(x)$\\
+	\hline
+	$\forall x (p(x))$\\
+
+\end{tabular}
+$\forall i$
+
+\begin{tabular}{c}
+	
+	$\forall x (p(x))$\\
+	\hline
+	$p(t)$\\
+
+\end{tabular}
+$\forall e$
+
+\begin{tabular}{c}
+	
+	$p(t)$\\
+	\hline
+	$\exists x (p(x))$\\
+
+\end{tabular}
+$\exists i$
+
+\begin{tabular}{c c}
+	
+	$\exists x (p(x))$ 
+		&
+	\begin{tabular}{|c|}
+			\hline
+			$p_{n}$\\
+			$\vdots$\\
+			$q$\\
+			\hline
+	\end{tabular} \\
+	\hline
+	\multicolumn{2}{c}{$q$}\\
+
+\end{tabular}
+$\exists e$
+
+\end{multicols}
+\end{center}
+
+Teniendo en cuenta que ni en $\forall i$ ni en $\exists e$ la variable $x$ debe ocurrir libre en ninguna hipótesis previa.
+
+\newpage
+\section{Especificación}
+
+\subsection{El contrato}
+
+Dentro del mundo de la programacion, siempre trabajamos bajo la idea de \textit{contrato}, en la que alguien nos solicita que diseñemos un programa que lo ayude a realizar una operacion concreta. Bajo estos terminos, necesitamos aclarar que tipo de problema queremos solucionar y como vamos a poder hacerlo.
+
+Es en este contexto donde nace la idea de \textit{especificación}, con la cual queremos dejar bien en claro, de manera formal y sin lugar a dudas o interpretaciones, que es lo que hay que resolver. No nos va a decir como hacerlo, pero si nos indica que tipo de parámetros de entrada vamos a utilizar, que salida esperamos, y, sin mas vueltas, que proceso queremos hacer. Esta escritura formal nos sera util a la hora de testear el programa y verificar su correctitud.
+
+Cada parámetro que tenga una especificación va a tener un tipo de dato, lo cual es un conjunto de valores y operaciones que se pueden aplicar sobre esos mismos valores.
+
+Retomando lo del contrato, siempre vamos a tener esta perspectiva. Vamos a trabajar en terminos de un \textit{usuario} que nos solicita a nosotros, los \textit{programadores}, que diseñemos un \textit{programa} para solucionar un \textit{problema}.
+
+\subsection{Sintaxis de la especificación}
+
+Una especificación consta de varias partes, en particular, se ven mas o menos asi:
+
+\begin{proc}{nombre}{parámetros}
+
+	\requiere{precondiciones}
+	
+	\asegura{postcondiciones}
+\end{proc}
+
+Donde \texttt{proc} es una palabra reservada para refererirnos a \textit{procedimiento}, es para iniciar la definicion de la especificación. El \textit{nombre} es el nombre que le damos a nuestra especificación, el cual podemos elegir nosotros. Recomendamos usar nombres claros y que indiquen cual es la operacion a resolver. Luego, los \textit{parámetros} son los valores de entrada o salida que nuestra especificación va a necesitar para realizar su evaluacion, suelen escribirse tipados.
+
+Luego, el renglon de \texttt{requiere}, la cual es una palabra reservada para iniciar las \textit{precondiciones}. Estas van a ser nuestras condiciones que el usuario debera cumplir con sus valores de entrada. Es decir, nosotros (los \textit{programadores}) vamos a dar por hecho que estas condiciones se van a cumplir. Es obligacion del usuario cumplir siempre con los \texttt{requiere} de nuestro programa.
+
+Finalmente, llegamos a la parte del \texttt{asegura}, que también es una palabra reservada, en este caso inicia las \textit{postcondiciones}. A diferencia del anterior punto, estas seran las condiciones que nuestro programa deberá cumplir para obtener la correcta salida o solucion. Es decir, es obligacion del \textit{programador} asegurar que las \textit{postcondiciones} se cumplan, y que el programa concluya lo que es correcto.
+
+Una cosa a tener en cuenta es acerca de los parámetros, los cuales tienen tres formas de entrar: \textit{in}, \textit{out} e \textit{inout}. Esto se suele especificar en la propia sintaxis antes de los parámetros, por ejemplo $in$ $x :$ \ent, o lo que es lo mismo \textit{x va a ser una variable de entrada de tipo entero}. Primero, las variables que se inicializan con el prefijo \textit{in} son aquellas que solo se puede acceder dentro de la funcion en la que se creo. El pasaje \textit{out} hace referencia a que los valores son exclusivamente salida, es decir, parte del resultado o el resultado en cuestion. En definitiva, son variables que se ven afectadas al concluir el programa. Por otro lado, una variable que se inicializa con \textit{inout}, es una variable de entrada pero que su valor se ve alterado o modificado al concluir el programa. No es un nuevo resultado, modificamos el mismo valor de entrada.
+
+Algo util a tener en cuenta a la hora de trabajar con funciones que tengan parámetros \textit{inout}, es como acceder al valor "viejo" o al "modificado" indistintamente. Para eso usamos la función \textit{old(x)}, que toma una variable $x$ y devuelve el valor inicial de la misma. Por ejemplo:
+
+\begin{proc}{incrementar}{\Inout $x:$ \ent}
+
+	\requiere{\True}
+	
+	\asegura{$x=old(x)+1$}
+\end{proc}
+
+Otro ejemplo de especificación, una vez visto todo esto, seria:
+
+\begin{proc}{sumar}{\In $x:$ \ent, \In $y:$ \ent, \Out $res:$ \ent}
+
+	\requiere{\True}
+	
+	\asegura{$res = x + y$}
+\end{proc}
+
+En el que vemos una función que devuelve la suma de los valores ingresados. Algo interesante es que en este caso el \texttt{requiere} no necesitaba nada, lo cual notamos con el valor \textit{True}.
+
+Vamos a contar con muchos tipos de datos, algunos conocidos y otros nuevos. En particular, tenemos:
+
+\begin{itemize}
+	\item \ent : Numeros enteros
+	\item \float : Numeros reales
+	\item \bool : Tipo booleano, \textit{verdadero} y \textit{falso}
+	\item \cha : Caracter, denota una letra del alfabeto
+	\item $enum$ \textit{nombre} $\{ constantes \}$ : Tipo enumerado
+	\item $T_{0} \times T_{1} \times \ldots \times T_{n}$ o $(x_{0}, x_{1}, \ldots , x_{n})$ : \textit{n}-uplas
+	\item \TLista{T} : Secuencia (o lista) de tipo T
+\end{itemize}
+
+Cada uno de estos tipos van a tener sus operaciones para poder trabajar con ellos, y la mayoria ya los conocemos, de hecho, pero eso lo veremos en profundidad mas adelante.
+
+Una herramienta importante a la hora de escribir especificaciones son los \textit{comentarios}, que son maneras de explicar en lenguaje humano que hace lo que estamos escribiendo en lenguaje lógico. Son partes de la especificación que no se van a tener en cuenta a la hora de resolver el problema, se van a ignorar, pero nos ayudan en la lectura. Se denotan como \comentario{tu comentario}.
+
+\begin{proc}{raizCuadrada}{\In $x:$ \ent, \Out $res:$ \ent}
+
+	\comentario{La raiz cuadrada de reales solo existe para positivos}
+	
+	\requiere{$x \leq 0$}
+	
+	\asegura{$res \leq 0 \land (res * res = x)$}
+
+\end{proc}
+
+Para terminar, vamos a analizar unos conceptos importantes que son consecuencia de la estructura de la especificación. Existe el termino \textit{sub-especificación}, lo que ocurre cuando la precondicion es muy restrictiva y la postcondicion mas laxa. Esto nos provoca una reduccion en los casos posibles de entrada muy notable, o ignora condiciones necesarias para la salida, lo que lleva a resultados no deseados. Por otro lado, existe la \textit{sobre-especificación}, que es el caso inverso, es decir, tener una precondicion mas laxa y una postcondicion mas restringida. En este caso, permitimos mas entradas de las que quizas queremos, y limita los posibles algoritmos que puedan resolver luego el problema.
+
+\subsection{Funciones auxiliares, predicados y condicionales}
+
+Existen ocasiones en las que hay una o mas operaciones que utilizamos reiteradas veces, y puede ser molesto repetirlas, aparte de hacer dificil la futura lectura de la especificación. Para estos casos, tenemos las \textit{funciones auxiliares}, que son especificaciones mucho mas basicas y sencillas, las cuales hacen una operacion exclusiva. La sintaxis de las funciones auxiliares se ve asi:
+
+\begin{center}
+	\aux{nombre}{\textit{parámetros}}{\textit{resultado}}{\textit{procedimiento}}
+\end{center}
+
+Se asemeja bastante a lo visto antes, lo unico nuevo es aquella parte de \textit{procedimiento}. Aqui es donde escribiremos la operacion a realizar o el resultado a dar. Fijense que no tenemos ni \texttt{requiere} ni \texttt{asegura}, lo cual hace mucho mas basica esta estructura. Un ejemplo habitual puede ser obtener un valor aproximado de alguna constante matematica, como:
+
+\begin{center}
+	\aux{pi}{}{\float}{3.14159}
+\end{center}
+
+Noten que aca hicimos una función que no tiene parámetros de entrada, lo cual también podria aplicarse a las especificaciones habituales.
+
+También, podemos definir \textit{predicados}, que son operaciones basicas como las funciones auxiliares de antes, pero que exclusivamente evaluan una fórmula lógica, es decir, su resultado es unicamente un valor de verdad. Un ejemplo comun de esto puede ser:
+
+\begin{pred}{esPar}{$n:$\ent} $n$ $mod$ $2 = 0$ \end{pred}
+
+Finalmente, tenemos las \textit{expresiones condicionales}, las cuales son funciones que elige entre dos elementos del mismo tipo, según una fórmula lógica. En particular, si la fórmula es verdadera, elije la primera opcion, y en caso contrario, la segunda. La estructura de una expresion condicional es del tipo:
+
+\centrado{\IfThenElse{\textit{condicion}}{\textit{primer resultado}}{\textit{segundo resultado}}}
+
+Estas estructuras se pueden usar en cualquier especificacion, tanto en los procedimientos como en las funciones auxiliares. Por ejemplo, si quisieramos una función que devuelve el máximo entre dos numeros dados, podriamos escribir:
+
+\begin{center}
+	\aux{máx}{$n:$ \ent, $m:$ \ent}{\ent}{\IfThenElse{$n>m$}{$n$}{$m$}}
+\end{center}
+
+Algo importante a tener en cuenta, es que a la hora de especificar problemas no podemos utilizar otros procedimientos para la solucion del mismo. Solo podemos utilizar predicados y funciones auxiliares, obviamente definiendolos previamente. A su vez, dentro de las funciones auxiliares no podemos definir instrucciones recursivas, ya que solo se tratan de un reemplazo sintactico.
+
+\subsection{Viejos y nuevos tipos de datos}
+
+Como mencionamos antes, tenemos muchos tipos de datos a la hora de especificar, lo cual esta bueno porque nos da mucha versatibilidad a la hora de estucturar problemas mas complejos, y no hay necesidad de reinventar siempre cada tipo de dato. Pero si es importante repasar las operaciones y fórmulas que podemos construir con cada uno.
+
+Los tipos "numericos", es decir, los \textit{enteros} y los \textit{reales}, ya los conocemos bien. Tenemos todas las operaciones habituales: suma, resta, multiplicacion, y en los reales, la division (pero no por cero). También tenemos los operandos de orden (menor, mayor, menor o igual, etc), y la igualdad. La potenciacion, y, en los reales, la raiz (con indice par, no para negativos), entre otras.
+
+Luego tenemos los tipos \textit{bool}, o \textit{booleanos}, que contienen valores de verdad. De esto hablamos mas a fondo en todo el capitulo 1 (el de lógica), pero en particular podemos tratarlos con la lógica de la semántica bi-valuada estándar, es decir, tenemos la \textit{negación} (notada $\neg$ o a veces con \textit{!}), el \textit{y lógico} ($\land$ o $\&\&$) y el \textit{o lógico} ($\lor$ o $||$).
+
+El tipo \textit{char}, o caracteres en español, es el conjunto de letras, dígitos y símbolos del alfabeto español. En particular. viene en el orden estándar ASCII, que seria $'a', 'b', \ldots, 'z', 'A', 'B', \ldots, 'Z', '1', '2', \ldots, '9'$. A los caracteres podemos consultar su numeracion en este orden, u obtener un caracter dado un orden puntual, por ejemplo:
+
+\begin{multicols}{2}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] $ord('a') = 1$
+		\item[] $ord('a') + 1 = ord('b')$
+		
+		\item[] $char(3) = 'c'$
+		\item[] $char(ord('b')) = 'b'$
+		
+		\item[] $char(ord('c') - ord('b')) = 'a'$
+		\item[] $ord('a') < ord('c')$
+	
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Los tipos \textit{enumerados}, por otro lado, son un conjunto de constantes que construimos nosotros. Como tal no hay tipos enumerados preexistentes, los vamos inventando a medida que los necesitemos. Existe, para tener en cuenta, la convención de escribir sus valores en mayúsculas, ya que son datos inmutables y que no van a cambiar, asi las diferenciamos de otras variables. Para definir el tipo \textit{Día}, por ejemplo, escribiriamos:
+
+\centrado{\enum{Día}{$LUN$, $MAR$, $MIER$, $JUE$, $VIE$, $SAB$, $DOM$}}
+
+Equivalentemente a los \textit{char}, los tipo \textit{enumerados} poseen funciones de orden y comparacion. Por ejemplo, podemos consultar que dia es el que está en la posicion 2, o en que posicion está determinado día. Noten que el indice de posiciones empieza en 0.
+
+\begin{multicols}{3}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] $ord(LUN) = 0$
+		\item[] \textit{Día}$(2) = MIE$
+		\item[] $MAR < JUE$
+	
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Continuando con los tipos de datos, tenemos la \textit{upla}, o $n-upla$, o \textit{tupla}. Le digan como le digan, en definitiva, se trata de un "vector" de datos, que pueden ser distintos o no. Algo importante, es que las \textit{tuplas} tienen un tamaño fijo: no podemos agregar ni quitar elementos. Se definen $T_{0} \times T_{1} \times \ldots \times T_{n}$, donde $T_{i}$ es el tipo de en la posicion $i$. Por ejemplo, $\mathbb{Z} \times \mathbb{Z}$ define el conjunto de vectore de dos dimensiones de los enteros, es decir los $(x, y)$, donde tanto $x$ e $y$ son enteros. También podemos combinar tipos, como $\mathbb{Z} \times Char$, es decir, vectores de la forma $(n, a)$, donde $n$ es un entero y $a$ algun caracter de los que vimos antes.
+
+Podemos acceder a cualquier posicion del vector utilizando la notacion $(a_{0}, a_{1}, \ldots, a_{n})_{m}$, donde $0 \leq m \leq k$, en caso contrario se indefine.
+
+\begin{multicols}{2}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] $(12, True, 'a')_{0} = 12$
+		\item[] $(12, True, 'a')_{1} = True$
+		\item[] $(12, True, 'a')_{2} = 'a'$
+		\item[] $(12, True, 'a')_{3} = \perp$
+	
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+\subsection{Secuencias, matrices y conjuntos}
+
+Luego, en la lista de tipos, tenemos a las \textit{secuencias}, que tienen tantas operaciones y particularidades que tienen su propio capitulo. Las \textit{secuencias} son una coleccion de valores de un mismo tipo, que pueden estar repetidos o no, y que tienen un cierto orden. Se definen \TLista{T}, donde T es el tipo de los datos. El tamaño de las secuencias, a diferencia de las tuplas, puede variar, o incluso pueden estar vacias. A su vez, como \TLista{T} es un tipo de dato en si mismo, podriamos definir una secuencia de secuencias de tipo T, es decir \TLista{\TLista{T}}.
+
+Por ejemplo, veamos una $seq \langle \mathbb{Z} \rangle$:
+
+\begin{center}
+	\begin{itemize}
+	
+		\item \lista{1,2,3,4,5} es una secuencia de enteros
+
+		\item \lista{5,4,3,2,1} es \textit{otra} secuencia de enteros, ya que tiene otro orden
+
+		\item \lista{1,2,3,4,True} es una secuencia de enteros mal definida, ya que uno de sus elementos es de otro tipo
+		
+		\item \lista{} es una secuencia de enteros que está vacia
+	
+	\end{itemize}
+\end{center}
+
+Tenemos un monton de funciones muy interesantes con las secuencias, vamos a verlas una a una.
+
+Para empezar, tenemos una operacion que nos indica la \textit{longitud} de la secuencia. Lo notamos $length(a : seq \langle T \rangle) : \mathbb{Z}$, donde $a$ es la secuencia a evaluar. También podemos escribir $|a|$, que es considerablemente mas corto. Unos ejemplos de esto:
+
+\begin{multicols}{3}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] $|$\lista{1,2,3}$| = 3$
+		\item[] $|$\lista{}$| = 0$
+		\item[] $|$\lista{'M', 'a', 's'}$| = 4$
+	
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Por otro lado, tenemos la \textit{indexacion}, que dado un indice de la secuencia nos devuelve el valor en esa posicion. Requerimos que el indice dado $i$ para la lista $l$ cumpla $0 \leq i < |l|$, ya que en otros casos sera indefinido. Es semejante a lo que haciamos con los vectores, solo cambia la notacion, pero es algo a tener en cuenta.
+
+\begin{multicols}{3}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \lista{1, 2, 3}$[0] = 1$
+		\item[] \lista{}$[0] = \perp$
+		\item[] \lista{'M', 'a', 's'}$[1] = 'a'$
+	
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+También podemos evaluar \textit{igualdad} entre secuencias, la cual se cumple si y solo si tienen la misma cantidad de elementos, y para cualquier indice dado, el i-esimo elemento en la primera lista es igual al de la segunda. Por ejemplo:
+
+\begin{multicols}{2}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \lista{1, 2, 3}$=$\lista{1, 2, 3}
+		\item[] \lista{}$=$\lista{}
+		\item[] \lista{1, 2, 3}$\neq$\lista{1, 3, 2}
+		\item[] \lista{2, 2, 2}$=$\lista{2, 2, 2}
+	
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Luego tenemos las operaciones de \textit{head} (o cabeza) y \textit{tail} (o ). La operacion \textit{head}, dada una lista $s$ nos devuelve el primer elemento de la misma, pero es requisito que la lista tenga por lo menos un elemento. Por otro lado, la función \textit{tail}, dada una lista $s$ nos devuelve la lista sin el primer elemento, es decir, habiendole sacado la cabeza.
+
+\begin{multicols}{2}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \head{\lista{1,2,3}}$= 1$
+		\item[] \head{\lista{}}$= \perp$
+		\item[] \tail{\lista{1,3,2}} $=$ \lista{3,2}
+		\item[] \tail{\lista{2}} $=$ \lista{}
+	
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Para agregar elementos a una lista tenemos la operación de \textit{AddFirst} (o añadir al principio), que dado un elemento $t$ y una lista $l$, crea una secuencia igual a $l$ pero "moviendo" todos sus elementos una posicion y dejando en la primera a $t$.
+
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \addFirst{'H'}{\lista{'o','l','a'}} $=$ \lista{'H','o','l','a'}
+		\item[] \addFirst{1}{\lista{2,2,2}} $=$ \lista{1,2,2,2}
+		\item[] \addFirst{1}{\lista{}} $=$ \lista{1}
+	
+	\end{itemize}
+\end{center}
+
+Quizas queremos combinar dos secuencias en una sola, y para eso tenemos la operación de la \textit{concatenación}. La notamos $concat(a, b)$ o $a$ $++$ $b$, donde $a$ y $b$ son dos secuencias cualesquiera. Lo que hace esta operación es devolvernos una lista con los elementos de $a$, seguidos de los de $b$. Las dos listas \textbf{deben} ser del mismo tipo.
+
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \lista{'H'} $++$ \lista{'o','l','a'} $=$ \lista{'H','o','l','a'}
+		\item[] \lista{1,2,3} $++$ \lista{3,4,5} $=$ \lista{1,2,3,3,4,5}
+		\item[] \lista{} $++$ \lista{} $=$ \lista{}
+		\item[] \lista{1,2} $++$ \lista{} $=$ \lista{1,2}
+		\item[] \lista{} $++$ \lista{1,2} $=$ \lista{1,2}
+	
+	\end{itemize}
+\end{center}
+
+Tambien podemos "cortar" secuencias, con la operacion de \textit{subseq} (o subsecuencia). Esta operacion toma una lista $l$, y dos numeros enteros $d$ y $h$, donde se cumple que $0 \leq d \leq h \leq |l|$, y cuando no se indefine. Esta operación devuelve una sublista de $l$ en las posiciones entre $d$ (inclusive) y $h$ (exclusive). Notemos que cuando $d = h$, el resultado es la secuencia vacía.
+
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \subseq{\lista{'o','l','a'}}{0}{1} $=$ \lista{'o'}
+		\item[] \subseq{\lista{'o','l','a'}}{0}{3} $=$ \lista{'o','l','a'}
+		\item[] \subseq{\lista{'o','l','a'}}{1}{1} $=$ \lista{}
+		\item[] \subseq{\lista{'o','l','a'}}{-1}{3} $= \perp$
+		\item[] \subseq{\lista{'o','l','a'}}{0}{5} $= \perp$
+	
+	\end{itemize}
+\end{center}
+
+Para terminar tenemos la operación de reemplazar un valor en alguna posicion de una secuencia. Es decir, la operación $setAt$ (o modifica en). Dada una lista $l$, una posicion $i$, y un valor $n$ del tipo de los elementos de la secuencia, podemos construir la operacion $setAt(l, i, n)$, donde requerimos que $0 \leq i < |l|$, ya que en caso contrario se indefiniria.
+
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \setAt{\lista{'o','l','a'}}{0}{'p'} $=$ \lista{'p','l','a'}
+		\item[] \setAt{\lista{'o','l','a'}}{0}{'O'} $=$ \lista{'O','l','a'}
+		\item[] \setAt{\lista{'o','l','a'}}{0}{3} $= \perp$
+		\item[] \setAt{\lista{}}{0}{5} $= \perp$
+	
+	\end{itemize}
+\end{center}
+
+Aparte de las secuencias, tenemos otro tipo igual de interesante: los \textit{conjuntos}. Estos son muy parecidos a las secuencias, pero con claras diferencias. Para empezar, en los conjuntos no puede haber elementos repetidos, y no importa el orden. Al listar sus elementos los encerramos entre llaves como $\{ \ldots \}$, pero tambien podemos notarlos $conj \langle T \rangle$, donde $T$ es el tipo de los elementos que contiene, ya que deben ser todos del mismo tipo, como en las secuencias.
+
+Al igual que en las secuencias, es como $conj \langle T \rangle$ es un tipo en si mismo, es posible crear conjuntos de conjuntos, o incluso conjuntos de secuencias, o secuencias de conjuntos. Algunos ejemplos para empezar pueden ser:
+
+\begin{center}
+	\begin{itemize}
+	
+		\item \set{1,2,3} es un conjunto de $\mathbb{Z}$
+		\item \set{3,2,1,1} es un conjunto de $\mathbb{Z}$ igual al anterior, porque no impota el orden o los repetidos
+		\item \set{} es un conjunto vacio de cualquier tipo.
+	
+	\end{itemize}
+\end{center}
+
+Tenemos unas cuantas operaciones para trabajar sobre conjuntos. Empecemos con las mas básicas: el \textit{cardinal}. Representa el tamaño del conjunto, es decir, la cantidad de elementos que tiene. Podemos escribirlo como $candinal(c)$ o bien $|c|$, donde $c$ es el conjunto a evaluar.
+
+\begin{multicols}{3}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] $|$\set{1,2}$| = 2$
+		\item[] $|$\set{'o','l','a'}$| = 3$
+		\item[] $|$\set{}$| = 0$
+			
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Tambien tenemos la operación de \textit{pertenece}, que nos indica si un elemento $e$ pertenece al conjunto $c$. Es importante notar que $e$ debe ser del mismo tipo que los elementos que contiene $c$. Lo escribimos como $in(e, c)$, o mas coloquialmente como $e \in c$.
+
+\begin{multicols}{3}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] $1 \in$ \set{1,2} $=$ \True
+		\item[] 'b' $\in$ \set{'a'} $=$ \False
+		\item[] $2 \in$ \set{} $=$ \False
+			
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Por otro lado, podemos combinar conjuntos con la operación \textit{unión}, que notamos $c_{o} \cup c_{1}$, que significa \textit{todos los elementos de $c_{0}$ y los de $c_{1}$}. Obviamente, los elementos de $c_{0}$ y los de $c_{1}$ deben ser del mismo tipo entre si.
+
+\begin{multicols}{2}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \set{1,2} $\cup$ \set{3,4} $=$ \set{1,2,3,4}
+		\item[] \set{1,2} $\cup$ \set{} $=$ \set{1,2}
+		\item[] \set{} $\cup$ \set{} $=$ \set{}
+		
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Aparte de esto, tenemos la intersección de conjuntos, que notamos como $intersection(c_{0}, c_{1})$, o mas comodamente $c_{0} \cap c_{1}$. Es decir, los elementos que compartan los conjuntos.
+
+\begin{multicols}{2}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \set{1,2} $\cap$ \set{2,3} $=$ \set{2}
+		\item[] \set{1,2} $\cap$ \set{} $=$ \set{}
+		
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Tambien existe la \textit{diferencia} de conjuntos, que notamos $diff(c_{0}, c_{1})$ o bien $c_{0} - c_{1}$. Consiste en "sacar" de $c_{0}$ todos los elementos que comparta con $c_{1}$.
+
+\begin{multicols}{2}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \set{1,2} $-$ \set{2,3} $=$ \set{1}
+		\item[] \set{1,2} $-$ \set{} $=$ \set{1,2}
+		
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Finalmente, tenemos la \textit{igualdad}, conocida como $c_{0} = c_{1}$. Determina si dos conjuntos son o no iguales, lo que sucede si y solo si los dos conjuntos tienen la misma cantidad de elementos, y tienen exactamente los mismos elementos. Recordemos que en conjuntos el orden no es relevante.
+
+\begin{multicols}{2}
+\begin{center}
+	\begin{itemize}
+	
+		\item[] \set{1,2} $=$ \set{1,2}
+		\item[] \set{1,2} $=$ \set{2,1}
+		\item[] \set{1,2,1,2} $=$ \set{2,1}
+		\item[] \set{1,2,3} $\neq$ \set{1,2}
+		
+	\end{itemize}
+\end{center}
+\end{multicols}
+
+Por ultimo, las \textit{matrices}. Consisten en secuencias de secuencias, donde todas las secuencias internas tienen exactamente el mismo tamaño, y no deben ser vacias. Es decir, una matriz de numeros enteros se define como $seq \langle seq \langle \mathbb{Z} \rangle \rangle$, aunque tambien aceptamos el reemplazo sintactico de $Mat \langle \mathbb{Z} \rangle$.
+
+En si mismo, las matrices no tienen operaciones basicas, pero, al tratarse finalmente de secuencias, podemos construir las nuestras. Por ejemplo, podemos construir un predicado que nos indique si una secuencia de secuencias es efectivamente una matriz:
+
+\begin{pred}{esMatriz}{\variable{m}{\TLista{\TLista{\ent}}}}
+	
+	$(\forall i) (0 \leq i < |m| \longrightarrow_{L} |m[i]|>0$ $\land$ $(\forall j) (0 \leq j < |m| \longrightarrow_{L} |m[j]| = |m[i]|))$	
+	
+\end{pred}
+
+Tambien, para ser un poco mas explicitos a la hora de medir las filas o columnas, podemos construir funciones auxiliares.
+
+\aux{filas}{\variable{m}{\TLista{\TLista{\ent}}}}{\ent}{$|m|$}
+
+\aux{columnas}{\variable{m}{\TLista{\TLista{\ent}}}}{\ent}{\IfThenElse{$filas(m)>0$}{$|m[0]|$}{0}}
+
+De aca, podemos definir estructuras mas complejas, como determinar si una matriz es la matriz identidad, o si es una matriz cuadrada, por ejemplo.
+
+\subsection{Sumatorias y productorias}
+
+Para los tipos numéricos $\mathbb{Z}$ y $\mathbb{R}$ contamos con estructuras matematicas para acumular resultados de operaciones repetidas. Una de estas estructuras es la \textit{sumatoria}, que notamos:
+
+\centrado{$\sum\limits_{i=d}^{h} p(i)$}
+
+Y que retorna la suma total de todas las expresiones $p(i)$, con $d \leq i \leq h$, es decir:
+
+\centrado{$p(d) + p(d+1) + \ldots + p(h-1) + p(h)$}
+
+Hay que tener en cuenta que si no se cumple que $d < h$ la sumatoria va a retornar 0, ya que $d$ y $h$ deben definir un rango finito de valores enteros. Si existe un $i$ tal que $d \leq i \leq h$ y $p(i) = \perp$, entonces toda la expresión se indefine. Noten que todas las expresiones $p(i)$ deben ser un valor numérico, es decir pertenecer a $\mathbb{Z}$ o a $\mathbb{R}$.
+
+Podemos construir estructuras muy interesantes con esta notacion, por ejemplo, si quisieramos sumar todos los elementos de una secuencia podriamos escribir un procedimiento que sea:
+
+\begin{proc}{sumaTodos}{\variable[\In]{l}{\TLista{\ent}}, \variable[\Out]{res}{\ent}}
+	\requiere{\True}
+	
+	\asegura{$res = \sum\limits_{i=0}^{|l|-1} l[i]$}
+\end{proc}
+
+De manera analoga, tenemos la \textit{productoria}: la cual consiste en mas o menos lo mismo, pero en lugar de sumar todas las expresiones bajo un rango, vamos a multiplicarlas. Las escribimos:
+
+\centrado{$\prod\limits_{i=d}^{h} p(i)$}
+
+Donde tambien necesitamos que $d<h$, ya que si no devolveria 1. Identicamente a lo anterior, si existe un $i$ tal que $d \leq i \leq h$ y $p(i) = \perp$, entonces toda la expresión se indefine. Noten que todas las expresiones $p(i)$ deben ser un valor numérico, es decir pertenecer a $\mathbb{Z}$ o a $\mathbb{R}$.
+
+\newpage
+\section{Correctitud}
+
+\subsection{Estados y ejecución}
+
+A la hora de programar para resolver un problema, no solo queremos escribir codigo "a lo bobo", es necesario verificar que ese codigo, ese \textit{programa} resuelve satisfactoriamente el problema, la especificación. Para verificar lo que llamamos \textit{correctitud} vamos a trabajar con el concepto de \textit{estado}, que consiste en la asignacion y valor de las variables en determinados momentos de ejecucion del codigo mismo.
+
+Decimos que un programa, con una precondición $P$ y una postcondición $Q$, es correcto si y solo si, iniciando en un estado $P$ \textbf{finaliza su ejecucion} y alcanza un estado final que \textbf{satisface $Q$}. Si llamamos $S$ al programa, lo notamos \triplaDeHoare{P}{S}{Q}.
+
+Por ejemplo, si analizamos el siguiente programa:
+
+\centrado{\smallLang{int x := 0;}}
+\centrado{\smallLang{x := x + 3;}}
+\centrado{\smallLang{x := x * 2;}}
+
+Si bien no es un programa muy interesante, podemos poner a prueba el metodo que vamos a utilizar en este capitulo, que es el de analizar la sucesion de los distintos estados a lo largo del programa. Continuando con el mismo ejemplo, podriamos afirmar que:
+
+\centrado{\smallLang{int x := 0;}}
+\centrado{\state{$x=0$}}
+\centrado{\smallLang{x := x + 3;}}
+\centrado{\state{$x=3$}}
+\centrado{\smallLang{x := x * 2;}}
+\centrado{\state{$x=6$}}
+
+Entonces podemos determinar cual sera la conclusion del programa, y mas importante aun, que tendra una. A esto nos refereriamos con \textit{finalizar la ejecucion}, el programa no se queda atorado en un bucle infinito o analiza una situacion indefinida, llega a una conclusion.
+
+Ahora veamos un programa algo mas complejo. Supongamos que tenemos un programa que, segun lo que nos indican, dados dos valores $a$ y $b$, el programa intercambia los valores. Es decir, le asigna a $a$ lo que valiera $b$, y viceversa. El programa es el siguiente:
+
+\centrado{\smallLang{a := a + b;}}
+\centrado{\smallLang{b := a - b;}}
+\centrado{\smallLang{a := a - b;}}
+
+A primera vista no es facil determinar si es o no correcto, por lo que iremos recorriendo las sentencias una a una. La idea es que si partimos de que $a = A_{o}$ y $b = B_{0}$, queremos llegar a que $a = B_{o}$ y $b = A_{0}$.
+
+\centrado{\state{$a = A_{0} \land b = B_{0}$}}
+\centrado{\smallLang{a := a + b;}}
+\centrado{\state{$a = A_{0} + B_{0} \land b = B_{0}$}}
+\centrado{\smallLang{b := a - b;}}
+\centrado{\state{$a = A_{0} + B_{0} \land b = (A_{0} + B_{0}) - B_{0} = A_{0}$}}
+\centrado{\smallLang{a := a - b;}}
+\centrado{\state{$a = (A_{0} + B_{0}) - B_{0} = B_{0} \land b = A_{0}$}}
+
+Y llegamos a la postcondicion que queriamos. Efectivamente, este programa cumple con lo pedido, decimos que es \textit{correcto}.
+
+En particular, no vamos a corregir programas escritos en un lenguaje de programación especifico, como Java o Python, sino que vamos a inventar nuestro propio lenguaje de instrucciones basicas, con el que podremos diseñar los programas, antes de implementarlos, y hacer este tipo de demostraciones y verificaciones.
+
+\subsection{SmallLang y predicados de analisis}
+
+A este "lenguaje de programación" simplificado lo llamaremos \textit{smallLang}, del ingles \textit{small language}, o \textit{pequeño lenguaje} en español. Va a consistir de dos instrucciones basicas:
+
+\begin{itemize}
+	\item[] \textbf{Hacer nada}: Se indica con la instruccion \textit{skip}.
+	
+	\item[] \textbf{Asignación}: Indicada por la instruccion $x := E$ (asignemos $E$ a la variable $x$).
+\end{itemize}
+
+A su vez, tenemos estructuras de control mas complejas que nos van a permitir hacer evaluaciones o formulas mas complejas:
+
+\begin{itemize}
+	\item[] \textbf{Secuencia}: $S1; S2$ si tanto $S1$ como $S2$ son programas.
+	
+	\item[] \textbf{Condicional}: \textit{if B then $S1$ else $S2$ endif} es un programa, si $B$ es una expresion lógica, y si tanto $S1$ como $S2$ son programas.
+	
+	\item[] \textbf{Ciclo}: \textit{while B do S endwhile} es un programa, si $B$ es una expresion lógica, y si $S$ es un programa.
+\end{itemize}
+
+Con este lenguaje, por mas basico que parezca, podemos representar algoritmos complejos y, lo que nos interesa a nosotros en particular, demostrar que son correctos.
+
+Aparte de esto, para evaluar las instrucciones del smallLang, vamos a tener dos predicados nuevos: $def(E)$ y $Q_{E}^{x}$.
+
+Decimos que, dando un predicado $E$, $def(E)$ son las condiciones necesarias para que $E$ este definida. Por ejemplo:
+
+\begin{itemize}
+	\item[] $def(x + y) \equiv def(x) \land def(y)$
+	
+	\item[] $def(x / y) \equiv def(x) \land (def(y) \land y \neq 0)$
+	
+	\item[] $def( \sqrt[]{x} ) \equiv def(x) \land x \geq 0$
+	
+	\item[] $def( a[i] ) \equiv (def(a) \land def(i)) \land_{L} 0 \leq i < |a|$
+\end{itemize}
+
+En particular, nosotros damos por hecho que las variables ya estan definidas. Es decir, que $def(x)$, con $x$ una variable cualquiera, es $True$. Teniendo esto en cuenta, podemos reformular lo antes dicho a:
+
+\begin{itemize}
+	\item[] $def(x + y) \equiv True$
+	
+	\item[] $def(x / y) \equiv y \neq 0)$
+	
+	\item[] $def( \sqrt[]{x} ) \equiv x \geq 0$
+	
+	\item[] $def( a[i] ) \equiv 0 \leq i < |a|$
+\end{itemize}
+
+Finalmente, el predicado $Q_{E}^x$ se lee como \textit{reemplaza en el predicado $Q$, todas las apariciones \textbf{libres} de la variable $x$ por la expresion $E$}. Un ejemplo de esto seria:
+
+\begin{itemize}
+	\item[] $Q \equiv 0 \leq i < n \land_{L} (\forall j : \mathbb{Z}) (a[j] = x)$
+	
+	\item[] $Q_{k}^{i} \equiv 0 \leq k < n \land_{L} (\forall j : \mathbb{Z}) (a[j] = x)$
+	
+	\item[] $Q_{k}^{j} \equiv 0 \leq i < n \land_{L} (\forall j : \mathbb{Z}) (a[j] = x)$
+\end{itemize}
+
+Con todo esto, podemos construir todas las demostraciones de todos los algoritmos que nos encontremos, y para hacer esto, tenemos un metodo: el de la \textit{precondicion mas debil}.
+
+\subsection{Precondición mas debil}
+
+Los problemas pueden tener muchos \texttt{requiere} y \texttt{asegura}, como vimos en el capitulo anterior. En particular, nos interesa buscar unos \texttt{requiere} $P$ que, al ejecutar el programa $S$, podamos concluir el \texttt{asegura} $Q$.
+
+Llamamos \textit{precondición mas debil} a la precondición menos restrictiva, es decir, lo minimo que podemos pedir para que el programa concluya con la postcondición $Q$. Lo notamos como $wp(S,P)$, del ingles \textit{weakest condition}. Un ejemplo para ilustrar esto puede ser: 
+
+\centrado{\smallLang{x := x + 1;}}
+
+Si suponemos una postcondición $Q \equiv x \leq 6$, podriamos deducir la precondición, y escribir:
+
+\centrado{\state{$x \leq 5$}}
+\centrado{\smallLang{x := x + 1;}}
+\centrado{\state{$x \leq 6$}}
+
+Pero tambien podriamos escribir:
+
+\centrado{\state{$x \leq 6$}}
+\centrado{\smallLang{x := x + 1;}}
+\centrado{\state{$x \leq 6$}}
+
+Lo cual seguiria siendo correcto, pero nos estariamos "salteando" posibles casos de entrada, posibles valores que $x$ puede tomar. En este caso, la precondicion mas debil seria $\{ x \leq 5 \}$, ya que es la que nos permite la mayor cantidad de casos de entrada, como dijimos antes, la menos restrictiva.
+
+Para encontrar estas precondiciones mas debiles, lo que haremos sera recorrer la ejecución del programa "para atras", empezando desde la ultima linea y tomando como referencia la conclusion, la postcondición. Es decir, intentaremos deducir que tuvo que pasar antes para llegar a la postcondición a la que se llego.
+
+Para esto vamos a utilizar una serie de axiomas para transformar las instrucciones de smallLang a predicados logicos, que finalmente es lo que son las precondiciones. Los axiomas son los siguientes:
+
+\begin{itemize}
+	\item[1.] $wp(x := E, Q) \equiv def(E) \land_{L} Q_{E}^{x}$
+	
+	\item[2.] $wp(skip, Q) \equiv Q$
+	
+	\item[3.] $wp(S1;S2, Q) \equiv wp(S1, wp(S2, Q))$
+	
+	\item[4.] Si $S \equiv $ \textit{if $B$ then $S1$ else $S2$ endif}, entonces,
+
+	\centrado{$wp(S, Q) \equiv def(B) \land_{L} ((B \land wp(S1, Q)) \lor (\neg B \land wp(S2, Q)))$}
+\end{itemize}
+
+Utilizando estas reglas podemos ir reconstruyendo las precondiciones apartir de las postcondiciones, y de hecho, vamos a llegar a la mas debil, siempre. Una vez llegados a la precondición mas debil, lo que nos interesa chequear es si nuestra precondición inicial era en efecto buena. En particular, nos interesa ver que:
+
+\centrado{$P \longrightarrow wp(S, Q)$}
+
+Veamos un ejemplo mas complejo para que quede todo claro. Supongamos el siguiente programa $S$:
+
+\smallLang{if (a > b) then} \\ S1:
+\smallLang{\tab res := a - b;}
+
+\smallLang{else} \\ S2:
+\smallLang{\tab res := b - a;}
+
+\smallLang{endif;}
+
+Con la postcondicion de $Q \equiv \{ res = |a-b| \}$, y ninguna precondición. No conocemos que tienen que cumplir las entradas para que el programa pueda concluir certeramente la postcondición, por lo que vamos a averiguarlo. Primero reescribamos lo que ya sabemos:
+
+\smallLang{if (a > b) then} \\ S1:
+\smallLang{\tab res := a - b;}
+
+\smallLang{else} \\ S2:
+\smallLang{\tab res := b - a;}
+
+\smallLang{endif;}
+
+\state{$res = |a-b|$}
+
+Utilizando el axioma 4, podemos deducir que:
+
+$wp(S, Q) \equiv def(a > b) \land_{L} ((a > b \land wp(S1, Q) \lor (\neg (a > b) \land wp(S2, Q)))$
+
+$wp(S, Q) \equiv def(a) \land def(b) \land_{L} ((a > b \land wp(S1, Q) \lor (\neg (a > b) \land wp(S2, Q)))$
+
+$wp(S, Q) \equiv True \land_{L} ((a > b \land wp(S1, Q)) \lor (\neg (a > b) \land wp(S2, Q)))$
+
+$wp(S, Q) \equiv (a > b \land wp(S1, Q)) \lor (\neg (a > b) \land wp(S2, Q)$
+
+Veamos cada precondición mas debil por separado para mas orden.
+
+$wp(S1, Q) \equiv (def(a - b) \land_{L} a-b = |a-b|)$
+
+$wp(S1, Q) \equiv (def(a) \land def(b)) \land_{L} (a-b = a-b \lor a-b = b-a)$
+
+$wp(S1, Q) \equiv True \land_{L} (True \lor a-b = b-a)$
+
+$wp(S1, Q) \equiv$ \True
+
+Analogamente, con la precondición de $S2$, llegamos a:
+
+$wp(S1, Q) \equiv (def(b - a) \land_{L} b-a = |a-b|)$
+
+$wp(S2, Q) \equiv$ \True
+
+Retomando lo que dejamos a medias, quedaria:
+
+$wp(S, Q) \equiv (a > b \land wp(S1, Q)) \lor (\neg (a > b) \land wp(S2, Q))$
+
+$wp(S, Q) \equiv (a > b \land True) \lor (\neg (a > b) \land True)$
+
+$wp(S, Q) \equiv a > b \lor \neg (a > b)$
+
+$wp(S, Q) \equiv$ \True
+
+Y finalmente, nuestra precondición mas debil para este problema, con ese programa, es $\{ True \}$, es decir, que no necesitamos pedirle nada a los parametros de entrada, podemos ingresar cualquier numero.
+
+Antes de terminar, vamos a hablar sobre las \textit{secuencias}, ya que son un caso bastante particular a la hora de buscar su precondición mas debil. Notemos que si tuvieramos la instruccion:
+
+\centrado{\smallLang{a[i] := 3;}}
+
+Es equivalente a \setAt{a}{i}{3} que vimos antes. Lo bueno de esto, que a primera vista parece ser solo un cambio de nombre y ya, es que podemos transcribir una instruccion del smallLang al lenguaje de predicados y lógica de primer orden que vimos antes. Es decir, podemos traducir a precondiciones o postcondiciones los algoritmos que diseñemos.
+
+Supongamos el codigo y la postcondicion:
+
+\centrado{\smallLang{A[i+2] := 0;}}
+\centrado{\state{$(\forall$\variable{j}{\ent}$)(0 \leq j < |A| \land_{L} A[j] \geq 0)$}}
+
+Para empezar a buscar la precondición mas debil en esta situacion, hacemos como hariamos habitualmente. Llamemos $S$ al programa y $Q$ a la postcondición, momentaneamente.
+
+\centrado{$wp(S, Q) \equiv def(S) \land_{L} Q_{S}^{A}$}
+
+Pero la asignación $S$ no tiene significado directo en nuestro lenguaje de primer orden, por lo que debemos traducirlo a la función \setAt{}{}{}, como dijimos antes. Entonces:
+
+\centrado{$S \equiv $ \setAt{A}{i+2}{0}}
+\centrado{$wp(S, Q) \equiv def(S) \land_{L} Q_{S}^{S}$}
+
+Luego, podemos reemplazar, y seguir las reglas conocidas.
+
+$wp(S, Q) \equiv def(S) \land_{L} Q_{S}^{A}$
+
+$def($\setAt{A}{i+2}{0}$) \land_{L} (\forall$\variable{j}{\ent}$)(0 \leq j < |$\setAt{A}{i+2}{0}$| \land_{L}$\setAt{A}{i+2}{0}$[j] \geq 0)$
+
+$0 \leq i+2 < |A| \land_{L} (\forall$\variable{j}{\ent}$)(0 \leq j < |A| \land_{L}$\setAt{A}{i+2}{0}$[j] \geq 0)$
+
+$0 \leq i+2 < |A| \land_{L} (\forall$\variable{j}{\ent}$)(0 \leq j < |A| \land_{L}((j = i + 2 \longrightarrow A[i+2] \geq 0) \land (j \neq i + 2 \longrightarrow A[j] \geq 0)))$
+
+Ahora, se que quedo como un choclo largo todo esto, pero se va a ir acortando. Primero notemos como separamos los casos donde $j = i + 2$ para poder desarmar el \setAt{}{}{}, ese truco es muy util. Por otro lado, podemos darnos cuenta que el valor de $A[i+2]$ es conocido, ya que es donde estamos haciendo la asignacion, asi que lo conocemos; de ese modo, podemos continuar:
+
+\indiceValido[i+2]{A}$\land_{L}$\paraTodoIndiceValido[j]{A}$\land_{L}((j = i + 2 \longrightarrow 0 \geq 0) \land (j \neq i + 2 \longrightarrow A[j] \geq 0)))$
+
+$0 \leq i+2 < |A| \land_{L} (\forall$\variable{j}{\ent}$)(0 \leq j < |A| \land_{L}((j = i + 2 \longrightarrow$\True$) \land (j \neq i + 2 \longrightarrow A[j] \geq 0)))$
+
+\indiceValido[i+2]{A}$\land_{L}$\paraTodoIndiceValido[j]{A}$\land_{L}(($\True$) \land (j \neq i + 2 \longrightarrow A[j] \geq 0)))$
+
+\indiceValido[i+2]{A}$\land_{L}$\paraTodoIndiceValido[j]{A}$\land_{L}(j \neq i + 2 \longrightarrow A[j] \geq 0))$
+
+Y asi llegamos a la precondición mas debil de este ejemplo. Noten que tiene mucho sentido, ya que la postcondición estaba diciendo que al finalizar el programa todos los valores en la secuencia \formula{A} seran positivos, pero al ejecutar el programa sabiamos que en la posición \formula{i+2} iba a haber un \formula{0}. Entonces, la precondición mas debil, el conjunto de secuencias mas amplio que servirian de entrada a este programa, son aquellas donde todos sus valores son positivos, salvo por la posicion \formula{i+2}, que es que el programa va a cambiar de todos modos.
+
+\subsection{El quinto axioma}
+
+Antes nosotros mostramos en particular unicamente cuatro axiomas, pero en realidad existen cinco. No mostramos que hacer con los ciclos, es decir, como encontrar su precondición mas debil.
+
+Primero veamos una operacion de predicados, parecida a las que vimos antes. Dado un programa de la forma \texttt{while B do S endwhile} vamos a definir la operacion \formula{H_{k}(Q)} como el conjunto de precondiciones tal que al ejercutar el programa durante \formula{k} iteraciones, concluya en el estado \formula{Q}.
+
+Se define inductivamente como:
+
+\formula{H_{0}(Q) \equiv def(B) \land \neg B \land Q}
+
+\formula{H_{k+1}(Q) \equiv def(B) \land B \land wp(S, H_{k}(Q)) \forall k}
+
+Lo cual tiene lógica, ya que si el programa se ejecuta 0 veces, entonces es identico a la regla \texttt{skip}: \formula{Q} tendria que haber valido de antes. Por otro lado, si sabemos que se ejecuto \formula{k+1} veces el programa, podemos asegurar que necesitamos la precondición mas debil tal que al ejecutarlo una vez, tenia que cumplir antes que al ejecutarlo \formula{k} veces concluyamos en aquella precondición antes mencionada.
+
+Finalmente, el quinto axioma de la precondicion mas debil quedaria:
+
+\centrado{\formula{wp(\texttt{while B do S endwhile}, Q) \equiv (\exists i \geq 0) (H_{i}(Q))}}
+
+Otra cosa importante para tener en cuenta, es como definimos la correctitud en un ciclo. Para que un ciclo sea correcto decimos que se tienen que cumplir dos cosas: primero, que dada la precondición \formula{P}, si corremos el programa con algun ciclo \formula{S}, llegamos a satisfacer la postcondición \formula{Q}; y segundo, que el ciclo termine. Es decir, que el programa no se \textit{cuelgue} en un ciclo infinito.
+
+Nota aparte, esto es uno de los problemas mas importantes de la computación en general: \textit{the halting problem}, o \textit{problema de la parada}, en español. La pregunta que se intenta averiguar es, si dado un programa cualquiera, podemos determinar o no si este se detendra. La respuesta es no, basicamente. Esta demostrado que existen programas a los que no podremos determinar si se deben detener en algun momento o tienen una ejecucion infinita.
+
+Existen metodos, pero no son tan comodos o deterministas de desarrollar. En particular, nosotros veremos dos: el \textit{teorema del invariante}, para analizar si la ejecucion del programa es correcta, y el \textit{teorema de terminacion}, con el que diremos si el programa finaliza o no.
+
+\subsection{Invariante y terminacion de ciclos}
+
+Estos son los dos metodos que vamos a utilizar para demostrar la correctitud de programas que contengan ciclos. Vamos por partes, que siempre es mas comodo. Primero vamos a ver cada teorema por separado, y luego mostraremos un ejemplo desarrollado donde apliquemos ambos.
+
+En primer lugar, tenemos el \textit{teorema del invariante}, que consiste en demostrar que el programa, dada la precondición, va a cumplir la postcondición. Como tal, el procedimiento es bastante directo y mecanizable, el problema radica en encontrar al \textit{invariante}. El invariante es un predicado que, como dice su nombre, no varia. Especificamente, no varia durante la ejecución del programa.
+
+Es decir, si llamamos \formula{I} al invariante de un programa \formula{S}. El invariante seria un predicado tal que \formula{I} vale antes de comenzar el ciclo, y que, si vale \formula{I} y \formula{B} en cualquier iteración del ciclo, entonces \formula{I} seguira valiendo al finalizar esa iteración.
+
+En particular, una vez que tenemos al invariante \formula{I}, el teorema del invariante dice que el programa es \textit{parcialmente} correcto, si se cumple que:
+
+\begin{itemize}
+	\item[\textbf{1.}] \formula{P \implica I}
+	\item[\textbf{2.}] \formula{\triplaDeHoare{I \land B}{S}{I}}
+	\item[\textbf{3.}] \formula{(I \land \neg B) \implica Q}
+\end{itemize}
+
+Con \textit{parcialmente correcto} nos referimos a que se verifica que el programa, dada la precondición, cumple la postcondición, pero no sabemos si el programa termina o no.
+
+Veamos punto por punto. Primero queremos que nuestra precondición implique nuestro invariante. Es decir, que si se cumplen las condiciones del programa, tambien se cumpla el invariante. Por otro lado, queremos que si se cumple el invariante y la condición del ciclo, es decir, va a suceder alguna iteración del mismo, queremos que al finalizar la ejecucion de cuerpo del ciclo, el invariante siga valiendo. O sea, que no cambie. Finalmente, lo que queremos es que, si el invariante se cumple, y no se cumple la guarda, es decir, no vamos a iterar dentro del ciclo, se va a satisfacer la postcondición del programa.
+
+Si lo seguimos punto a punto es bastante lógico, queremos un punto medio, un \textit{puente}, entre la precondición, y la postcondición, y que no cambie durante las iteraciones del ciclo. El problema radica a la hora de elegir un buen invariante.
+
+En segundo lugar, tenemos el \textit{teorema de terminación}, que nos ayuda a determinar si un programa finaliza su ejecucion o no. Analogo al invariante, en este caso vamos a necesitar una \formula{f_{V}}, tambien llamada \textit{función variante}. Como indica el nombre, será una función que varia a lo largo de las iteraciones del ciclo del programa. En particular, el hecho de que sea una función, es porque esta formada por las variables del programa. Es como un indicador de \textit{cuanto falta} para que el programa termine su ejecución.
+
+Formalmente, lo definimos como: sea \formula{\mathbb{V}} el producto cartesiano de los dominios de las variables del programa, llamamos \textit{función variable} o \formula{f_{V}}, a la funcion \formula{f_{V} : \mathbb{V} \implica \mathbb{Z}}.
+
+El teorema de terminación dice que, si existe una función \formula{f_{V}}, un invariante \formula{I} y \formula{v_{0}} un valor de \formula{f_{V}}, tales que:
+
+\begin{itemize}
+	\item[\textbf{1.}] \formula{\triplaDeHoare{I \land B \land f_{V} = v_{o}}{S}{f_{V} < v_{o}}}
+	\item[\textbf{2.}] \formula{(I \land f_{V} \leq 0) \implica \neg B}
+\end{itemize}
+
+Entonces el programa en algun momento termina.
+
+Ahora veamos todo esto en un ejemplo, supongamos el siguiente programa:
+
+\smallLang{while (i <= n) do}
+
+\smallLang{\tab s := s + i;}
+
+\smallLang{\tab i := i + 1;}
+
+\smallLang{endwhile;}
+
+Y supongamos tambien, que tenemos de precondición \set{\formula{n \geq 0 \land i = 1 \land s = 0}} y de postcondición \set{\formula{s = \sum\limits_{k=1}^{n} k}}. Ahora necesitamos verificar que este programa es correcto, y en particular, que el ciclo del programa finaliza y cumple con la postcondición.
+
+Empecemos demostrando la correctitud del ciclo con el teorema del invariante. Primero, definimos nuestro invariante como \set{\formula{1 \leq i \leq n + 1 \land s = \sum\limits_{k=1}^{i-1} k}}. Suena como que me lo saque de la galera, lo se, pero si analizamos el ciclo del programa, podemos darnos cuenta que en particular estas son las cosas que efectivamente no cambian a lo largo de cada iteracion. Un consejo para buscar invariantes, es siempre tener en cuenta el indice y sus limites, y predicados que se encuentren en la postcondición, pero ajustados de modo que no cambien.
+
+Vamos parte por parte. Primero hay que demostrar que \formula{P \implica I}.
+
+Como \formula{i = 1} y \formula{n \geq 0}, en particular se cumple que \formula{0 \leq i \leq n + 1}
+
+Sabemos que \formula{s = 0}, pero como \formula{i = 1}, se tiene que \formula{s = \sum\limits_{k=1}^{i-1} k = \sum\limits_{k=1}^{0} k} = 0
+
+Y listo, utilizando solo los predicados de la precondición, deducimos el invariante. Ahora hagamos lo mismo con los demas casos. Tenemos que verificar \formula{\triplaDeHoare{I \land B}{S}{I}}.
+
+\set{\formula{i = I_{0} \land s = S_{0} \land 1 \leq I_{0} \leq n + 1 \land S_{0} = \sum\limits_{k=1}^{I_{0}-1} k \land I_{0} \leq n}}
+
+\smallLang{s := s + i;}
+
+\set{\formula{i = I_{0} \land s = S_{0} + I_{0} \land 1 \leq I_{0} \leq n + 1 \land S_{0} = \sum\limits_{k=1}^{I_{0}-1} k \land I_{0} \leq n}}
+
+En particular, como \formula{s = S_{0} + I_{0}} y \formula{S_{0} = \sum\limits_{k=1}^{I_{0}-1} k}, tenemos que \formula{s = (\sum\limits_{k=1}^{I_{0}-1} k) + I_{0} = \sum\limits_{k=1}^{I_{0}} k}
+
+\set{\formula{i = I_{0} \land s = \sum\limits_{k=1}^{I_{0}} k \land 1 \leq I_{0} \leq n + 1 \land S_{0} = \sum\limits_{k=1}^{I_{0}-1} k \land I_{0} \leq n}}
+
+\smallLang{i := i + 1;}
+
+\set{\formula{i = I_{0} + 1 \land s = \sum\limits_{k=1}^{I_{0}} k \land 1 \leq I_{0} \leq n + 1 \land S_{0} = \sum\limits_{k=1}^{I_{0}-1} k \land I_{0} \leq n}}
+
+En particular, si \formula{i = I_{0} + 1}, y \formula{I_{0} \leq n}, tenemos que \formula{i \leq n + 1}
+
+A su vez, si \formula{i = I_{0} + 1} entonces \formula{I_{0} = i - 1}, por lo que \formula{s = \sum\limits_{k=1}^{I_{0}} k = \sum\limits_{k=1}^{i-1} k}
+
+Y finalmente, concluimos \set{\formula{1 \leq i + 1 \leq n + 1 \land s + 1 = \sum\limits_{k=1}^{i-1} k}}
+
+Por ultimo, pasemos a demostrar \formula{I \land \neg B \implica Q}.
+
+\set{\formula{1 \leq i \leq n + 1 \land s = \sum\limits_{k=1}^{I_{0}-1} k \land i > n}}
+
+Como \formula{1 \leq i \leq n + 1} y tambien \formula{i > n} tenemos que \formula{i = n + 1}
+
+Entonces, \formula{s = \sum\limits_{k=1}^{I_{0}-1} k = \sum\limits_{k=1}^{n} k}
+
+Que es lo que queriamos demostrar. Entonces terminamos la primera parte. El programa es \textit{parcialmente} correcto, es decir, si el ciclo no se queda infinitamente iterando y en algun momento termina, el programa cumplira con la postcondición. Ahora analicemos si efectivamente termina.
+
+Como función variante vamos a elegir \formula{n - i + 1}, que tambien, va a aparecer sacado de la galera, pero tiene mucho sentido si miramos detalladamente la funcion. Consta del limite de iteracion (\formula{n}), y una variable que sabemos va cambiando a lo largo del programa (\formula{i}). Probemos punto a punto si funciona.
+
+Primero hay que comprobar que \formula{\triplaDeHoare{I \land B \land f_{V} = v_{o}}{S}{f_{V} < v_{o}}}.
+
+En particular, del invariante nos interesa que \set{\formula{1 \leq i \leq n + 1 \land i \leq n \land f_{V} = n - i + 1}}
+
+\smallLang{s := s + i;}
+
+Queda igual, \set{\formula{1 \leq i \leq n + 1 \land i \leq n \land f_{V} = n - i + 1}}, ya que ahora \formula{s} no nos interesa
+
+\smallLang{i := i + 1;}
+
+\set{\formula{1 \leq i+1 \leq n + 1 \land i+1 \leq n \land f_{V} = n - (i+1) + 1}}
+
+En particular, \formula{f_{V} = n - (i+1) + 1}, por lo que \formula{f_{V} = n - (i + 1) + 1 = n - i}, pero recordemos que \formula{n - i + 1 = v_{0}}, y entonces \formula{f_{V} = n - i < n - i + 1 = v_{0}}.
+
+Y asi, como vimos, demostramos que la función efectivamente decrece con cada iteración del ciclo. Para finalizar, vamos a verificar que sucede \formula{I \land f_{V} \leq 0 \implica \neg B}.
+
+\set{\formula{1 \leq i \leq n + 1 \land n - i + 1 \leq 0}}
+
+\set{\formula{1 \leq i \leq n + 1 \land n + 1 \leq i}}
+
+Veamos que \formula{i \leq n + 1} y al mismo tiempo \formula{i \geq n + 1}, por lo que podemos deducir que \formula{i = n + 1}. Y esto implica totalmente a \formula{\neg B}, ya que \formula{B \equiv i \leq n \longrightarrow \neg B \equiv i > n}, y si \formula{i = n + 1}, en particular se cumple que \formula{i > n}, como nosotros queriamos.
+
+Entonces ya esta. Encontramos una funcion variante que satisface las dos condiciones del teorema de terminacion, por lo que podemos afirmar que, en algun momento, el ciclo va a terminar; el programa no se va a \textit{colgar}.
+
+En particular, como demostramos tanto la correctitud como la terminación del programa, podemos finalizar diciendo que el programa es correcto completamente. Satisface la postcondicón y finaliza su ejecución.
+
+\newpage
+\section{Tipos Abstractos de Datos}
+
+\subsection{La abstracción de la realidad}
+
+Muchas veces, como programadores, no vamos a tener un objetivo tan claro como \textit{contar todos los elementos de una lista} o \textit{definir un conjunto con ciertas propiedades}. De hecho, generalmente el objetivo del programa va a ser algo como \textit{hacer un buscaminas} o \textit{modelar un restaurante}, y la cosa se nos complica.
+
+Para estos casos aparecen los llamados \textit{tipos abstractos de datos} (de ahora en adelante, TADs). Estas son estructuras construidas en el lenguaje de especificación que representan ideas u objetos mas complejos que los tipos de datos que poseemos, pero que intentan modelar sus propiedades y comportamientos.
+
+Quedense con esta idea clave: \textit{modelar}. El objetivo de un TAD es representar de la manera mas fiel posible al concepto original. Esto nos va a servir para, a la hora de posteriormente implementar dicho concepto en un lenguaje de programacion, poder demostrar su correctitud mucho mas facil.
+
+La estructura de un TAD consiste en dos partes clave: los observadores y las funciones (o procedimientos, seria mas adecuado).
+
+\subsection{Observadores y propiedades}
+
+Los observadores son estructuras que nos permiten visualizar algun dato del TAD en cuestion. Es decir, nos permiten acceder a alguno de los datos (o un conjunto de los mismos) que componen al TAD. El objetivo de los observadores es ayudarnos a discernir una instancia del objeto de otra.
+
+Es decir, que dadas dos instancias del tipo que queremos representar, solo en base a los observadores deberiamos ser capaces de diferenciar uno de otro, o, lo que es lo mismo, afirmar si son o no iguales.
+
+Por ejemplo, si quisieramos representar puntos del plano cartesiano, y crearnos un TAD \textit{punto}, para ya tener operaciones y propiedades definidas, podriamos hacer lo siguiente:
+
+\begin{tad}{Punto}
+	\obs{x}{\float} \\
+	\obs{y}{\float}
+\end{tad}
+
+Pero tambien, podriamos representar un punto por las coordenadas polares: con \formula{\rho} y \formula{\theta}. En ese caso, nuestro TAD quedaria:
+
+\begin{tad}{Punto}
+	\obs{\formula{\rho}}{\float} \\
+	\obs{\formula{\theta}}{\float}
+\end{tad}
+
+Podrian estar pensando ahora \textit{hey, pero si con ambas nos es suficiente, ¿por que no utilizar ambas a la vez?}, a lo que yo contestaria \textit{porque es una mala practica}. Basicamente, la idea de los observadores es utilizar la menor cantidad posible, es decir, poder deducir informacion con la menor cantidad de pistas posible. No es que nos haga daño usar informacion "redudante", pero se la considera mala practica por eso mismo. Por ejemplo, podriamos deducir \formula{\rho} conociendo los valores de \formula{x} y de \formula{y}, y es identico con \formula{\theta}. Analogamente, podriamos hacer el camino inverso. Por esta misma razon, con utilizar una de las dos representaciones nos alcanza.
+
+Teniendo esto en cuenta, podemos afirmar que dos instancias del tipo \formula{punto} son iguales si y solo si sus observaciones son identicas. A este hecho lo llamamos \textit{igualdad observacional}.
+
+Y asi, dado un punto, podemos observar su coordenada \formula{x} y su coordenada \formula{y}. No es muy util esto, es decir, ahora mismo el TAD no hace nada, pero podemos agregarle propiedades a los puntos. Para definir propiedades, podemos formular procedimientos como lo venimos haciendo, con el lenguaje de especificacion, utilizando funciones auxiliares y demas. A su vez, teniendo en cuenta todas las precauciones que tambien vimos. 
+
+Continuando con el ejemplo, agreguemos unas funciones basicas.
+
+\begin{tad}{Punto}
+	\obs{x}{\float} \\
+	\obs{y}{\float}
+	
+	\begin{proc}{crearPunto}{\In x1 : \float, \In y1 : \float, \Out res : \textit{Punto}}
+		\asegura{\formula{res.x = x1 \land res.y = y1}}
+	\end{proc}
+\end{tad}
+
+Aca se puede ver como, dados dos numeros reales, podemos generarnos una \textit{cosa} de tipo \textit{punto} (¡Hemos creado nuestro propio tipo de dato!). Ahora mismo solo podemos crear puntos, pero podemos agregar funciones mas utiles, como calcular el modulo de un punto. Eso se veria asi:
+
+\begin{tad}{Punto}
+	\obs{x}{\float} \\
+	\obs{y}{\float}
+	
+	\begin{proc}{crearPunto}{\In x1 : \float, \In y1 : \float, \Out res : \textit{Punto}}
+		\asegura{\formula{res.x = x1 \land res.y = y1}}
+	\end{proc}
+	
+	\begin{proc}{modulo}{\In p : \textit{Punto}, \Out res : \float}
+		\asegura{\formula{res = \sqrt{{(p.x)}^{2} + {(p.y)}^{2}}}}
+	\end{proc}
+	
+\end{tad}
+
+Nos estamos tomando la libertad de no escribir los \textit{requiere} ya que en todos estos casos son igual a \True, en caso de necesitarlos, tambien habria que escribirlos.
+
+Bien, ya estamos escribiendo nuestros propios TADs, y somos capaces de agregarles propiedades y comportamientos. Ahora levantemos un poco la dificultad, para molestar un poco, supongamos que queremos crear dos TADs: uno de \textit{estudiante} y otro de \textit{materia}.
+
+Vamos a basar un estudiante en tres cosas: su nombre, la edad y la carrera que esta estudiando. Por otro lado, la materia va a ser alguna materia a la que vamos a poder pedirle de que carrera forma parte, y que estudiantes la estan cursando.
+
+A su vez, vamos a querer definir una lista de funciones: queremos verificar que el estudiante sea mayor de edad, y dada una materia, ver si esta cursando esa materia.
+
+\begin{tad}{Estudiante}
+	\obs{nombre}{\str} \\
+	\obs{edad}{\ent} \\
+	\obs{carrera}{\str}
+	
+	\begin{proc}{esMayor}{\variable[\In]{e}{\textit{Estudiante}}, \variable[\Out]{res}{\bool}}
+		\asegura{\formula{res = \True \longleftrightarrow e.edad \geq 18}}
+	\end{proc}
+
+	\begin{proc}{estaCursando}{\variable[\In]{e}{\textit{Estudiante}}, \variable[\In]{m}{\textit{Materia}}, \variable[\Out]{res}{\bool}}
+		\asegura{\formula{res = \True \longleftrightarrow ((\exists i :} \ent \formula{) (0 \leq i < |mostrarCursantes(m)| \longrightarrow \\ \tab \tab \tab \tab mostrarCursantes(m)[i].nombre = e.nombre))}}
+	\end{proc}
+\end{tad}
+
+\begin{tad}{Materia}
+	\obs{cursantes}{\TLista{\textit{Estudiante}}} \\
+	\obs{carrera}{\str}
+	
+	\aux{mostrarCursantes}{\variable[\In]{m}{\textit{Materia}}}{\TLista{\textit{Estudiante}}}{\formula{m.cursantes}}
+\end{tad}
+
+Parecia complicado, pero no nos quedo algo tan enrevesado. De aca, uno puede especificar lo que quiera. Podemos utilizar la propiedad de carrera para clasificar los alumnos segun su carrera, o comparar la cantidad de estudiantes de cada materia. Esto es solo un ejemplo basico.
+
+Notemos como la función \textit{mostrarCursantes} es una función auxiliar. Esto es asi, ya que si lo hubieramos hecho un procedimiento, no podriamos luego utilizarlo en el TAD de \textit{estudiante}. Recordemos, un procedimiento no puede utilizarse dentro de otro, y aca se conserva esa regla. Si podemos, por otro lado, usar funciones auxiliares o predicados, pero no procedimientos. Los observadores son exclusivos de la definición del TAD, asi que tampoco podemos usarlos en otros TADs.
+
+\newpage
+\section{Diseño de algoritmos}
+
+\subsection{¿Donde está el diseño?}
+
+Nosotros vimos dos etapas enormes a la hora de trabajar en el mundo de la programación: la \textit{especificación} y la \textit{implementación}. Esto se debe a la simpleza de los problemas que queriamos resolver, pero en el mundo real existen problemas mas complejos o, sin ir mas lejos, TADs que vamos a querer representar. Esta clase de problemas va a requerir un paso intermedio, algo que nos ayude a resolver el problema antes de implementarlo, una forma de unir el mundo de la especificación y el de la implementación. Es en este contexto, donde entra la etapa de \textit{diseño}.
+
+Esta etapa de diseño consiste en una union entre la especificación y la implementación, como dijimos antes. Va a haber funciones que tomen por parametros tipos de la especificación, y devuelvan tipos de implementación, o viceversa. A su vez, la sintaxis a veces puede resonar como smallLang, pero otras puede parecerse a la lógica matematica que venimos viendo. Va a ser un poco abstracto, porque nos estamos tomando muchas libertades para que sea lo mas ameno posible.
+
+A su vez, lo que vamos a intentar dar a entender en este paso es el \textit{como} tenemos planeado resolver los problemas planteados. Es decir, vamos a dar con nuestro algoritmo, nuestro plan de ataque. Mas adelante veremos si ese plan de ataque es bueno o malo, segun los criterios de la complejidad.
+
+\subsection{De regreso a los TADs}
+
+Los TADs son una estructura sumamente compleja. Son un conjunto de operaciones y estructuras de datos, que representan ideas mas abstractas y no tan tangibles, como un numero, una lista o una palabra.
+
+Supongamos que queremos diseñar el TAD mostrado antes, el de \textit{estudiantes}. Lo primero que hariamos seria utlizar las palabras reservadas \textit{modulo} y \textit{implementa}, en la que indicamos el nombre de nuestro modulo a diseñar y de que TAD proviene. En nuestro caso:
+
+\begin{modulo}{estudianteImpl}{Estudiante}
+	\var{nombre}{\str} \\
+	\var{edad}{\texttt{int}} \\
+	\var{materiasCursando}{\TArray{\str}}
+\end{modulo}
+
+Noten que escribimos tambien las variables que creemos vamos a necesitar. Estos van a ser un analogo a los observadores de los TADs, pero van a estar en el tipo de la implementacion. Es decir, ya no tenemos secuencias o conjuntos, sino \textit{arrays}, que tienen un tamaño fijo y no dinamico. Si quisieramos que no haya repetidos, por ejemplo, tendriamos que asegurarnos de eso en como diseñemos nuestro modulo.
+
+Podemos hacer aclaraciones afuera del modulo, como cambios de nombres que nos sean mas comodo. Por ejemplo, vamos a reemplazar uno de los \textit{String}, por \textit{Materias}. Es un reemplazo sintactico nada mas, pero va a facilitar la lectura. De ese modo, quedaria:
+
+\renombre{Materia}{\str}
+
+\begin{modulo}{estudianteImpl}{Estudiante}
+	\var{nombre}{\str} \\
+	\var{edad}{\texttt{int}} \\
+	\var{materiasCursando}{\TArray{\texttt{Materia}}}
+\end{modulo}
+
+Las operaciones, que seguiremos llamando procedimientos, podemos escribirlas ahora en \textit{SmallLang}, o cualquier otra estructura de pseudocodigo. Lo importante es que se entienda nuestro enfoque para resolver estos problemas. Si quisieramos escribir las operaciones de \textit{esMayor} y \textit{estaCursando}, podriamos escribir lo siguiente:
+
+\renombre{Materia}{\str}
+
+\begin{modulo}{estudianteImpl}{Estudiante}
+	\var{nombre}{\str} \\
+	\var{edad}{\texttt{int}} \\
+	\var{materiasCursando}{\TArray{\texttt{Materia}}}
+	
+	\begin{proc}{esMayor}{\variable[\In]{e}{\textit{estudianteImpl}}, \variable[\Out]{res}{\bool}}
+		\smallLang{res = e.edad >= 18}
+	\end{proc}
+	
+	\begin{proc}{estaCursando}{\variable[\In]{e}{\textit{estudianteImpl}}, \variable[\In]{m}{\texttt{Materia}} \variable[\Out]{res}{\bool}}
+		\smallLang{res = \False} \\
+		\smallLang{i := 0} \\
+		\smallLang{while i < e.materiasCursando:} \\
+		\smallLang{\tab if e.materiasCursando[i] == m:} \\
+		\smallLang{\tab \tab res = \True}
+	\end{proc}
+\end{modulo}
+
+Noten que nos tomamos muchas libertades con la escritura, por ejemplo, no escribimos los \textit{endif} y \textit{endwhile}, ni los punto y coma. Reiteramos en que, esto no es una implementación, es un diseño. Nuestro objetivo es analizar el comportamiento del algoritmo. Aun asi, si quisieramos, podriamos demostrar correctitud, o buscar los invariantes de ciclos o lo que quisieramos realmente.
+
+Ahora bien, a nosotros nos gustaria verificar que nuestro diseño es correcto. Es decir, efectivamente identifica y representa al TAD que estamos analizando. Para eso, existen dos funciones importantes a tener en cuenta.
+
+La primera es el \textit{invariante de representación}. Es parecido al invariante del ciclo que vimos antes, pero no igual. Basicamente, un \textit{invariante de representación} es un predicado o conjunto de predicados que, al ejecutar el programa, no cambia, no se ve afectado. A su vez, nos tiene que estar diciendo \textit{algo} sobre el TAD que queremos evaluar.
+
+Es decir, el \textit{invariante de representación} es un conjunto de predicados que hablan sobre el TAD y que nunca deberian romperse, nunca deberian ser falsos.
+
+Por ejemplo, supongamos que tenemos un TAD para definir un circulo, y lo tenemos escrito asi:
+
+\begin{tad}{Circulo}
+	\obs{centro}{\textit{Punto}} \\
+	\obs{radio}{\float}
+\end{tad}
+
+Ahora bien, sin importar el programa que estemos evaluando (recordemos, no estamos implementado todavia), nos interesa que la propiedad \textit{radio} nunca sea negativa, ya que entonces nuestro objeto circulo no tendria sentido. Ese seria un buen invariante de representacion, entonces, tenemos que:
+
+\centrado{\formula{I_{rep} \equiv radio > 0}}
+
+Ahora bien, un invariante de representación esta definido sobre el diseño de un TAD. Es decir, es un predicado que, entre sus parametros, esta la instancia de un TAD implementado. Supongamos que, estamos pensando en la implementación del circulo, y se nos ocurre que podriamos hacerlo con una variable de tipo \textit{punto} que sea un centro, y otra de tipo {\float} que sea el radio. Entonces, el diseño del TAD circulo se veria:
+
+\begin{modulo}{CircImpl}{Circulo}
+	\var{centro}{\texttt{Punto}} \\
+	\var{radio}{\float}
+\end{modulo}
+
+Entonces, su invariante de representación podemos escribirlo como:
+
+\begin{pred}{InvRep}{\variable[\In]{objeto}{\textit{TADImpl}}}
+
+\formula{objeto.radio \geq 0 \longleftrightarrow res =} \True
+
+\end{pred}
+
+Y eso deberia cumplirse antes de la ejecucion del codigo, y despues, es decir, queremos que se cumpla:
+
+\centrado{\triplaDeHoare{\formula{P \land I_{rep}}}{S}{\formula{Q \land I_{rep}}}}
+
+Nunca vamos a querer evaluar casos que no cumplan con la precondición o que no lleguen a la postcondición, asi que los incluimos en la tripla de Hoare.
+
+Otra propiedad util es la conocida como \textit{función de abstracción}, que consiste en una funcion \formula{T_{impl} \longrightarrow T}, donde \formula{T_{impl}} es el tipo del TAD implementado, es decir, su modelo hecho programa; y \formula{T} es el tipo del TAD a representar.
+
+Retomando el ejemplo del circulo, deberia tomar por parametro de entrada un circulo implementado y devolvernos un circulo abstracto del TAD, es decir:
+
+\aux{FuncAbs}{\variable[\In]{c'}{\textit{CircImpl}}}{\textit{Circulo}}{\formula{(c'.centro = res.centro \land c'.radio = res.radio)}}
+
+Quizas no parezca muy interesante en principio, pero lo notable aca es que recibimos un parametro de tipo \textit{circulo implementado} y recibimos su \textit{representación original} del TAD. Para que la función de abstracción tenga sentido, requerimos que los observadores sean suficientes para distinguir una instancia de otra (lo que dijimos al principio).
+
+\subsection{Complejidad}
+
+A la hora de diseñar algoritmos y estructuras de datos, tenemos que procurar dos cosas clave: que el algoritmo en cuestion efectivamente resuelva el problema (lo que venimos viendo hasta ahora); y que sea eficiente. Ahora bien, ¿que significa la \textit{eficiencia}?
+
+Si tuvieramos dos algoritmos, y uno tarda 2 horas, y el otro tardase 1 hora, es facil advertir cual de los dos es mejor: el segundo. Tarda menos, evidentemente lo que sea que haga lo hace \textit{mejor}.
+
+Supongamos que tenemos un programa, y nos interesa determinar su duración en base al tamaño del input. Es decir, queremos ver la relación entre el tamaño de la entrada (por ejemplo, que tan larga es una lista de entrada) y el tiempo que consume resolver el problema (por ejemplo, cuanto tarda en encontrar un elemento en esa lista). Este concepto de relación entre el tamaño de la entrada y el tiempo que consume, es al que llamamos \textit{eficiencia}. A mayor eficiencia, menor tiempo consumira con inputs grandes.
+
+\textit{Nota: En el ejemplo hablamos de la duración temporal del programa, pero podriamos estar buscando reducir otra cosa (tamaño en memoria, consumo de energia, entre otras particularidades).}
+
+Esta medida de la eficiencia es la que nos va a permitir elegir entre dos o mas algoritmos, poder categorizarlos y evaluarlos, determinar cual es mejor o peor que otro segun la circunstancia que queramos medir.
+
+Ahora bien, medir el tiempo de un programa no es tarea facil. Uno puede hacerlo de dos maneras: midiendolo \textit{a mano}, es decir, cronometrando el programa al correrlo; o medirlo de manera teorica en base a su comportamiento. La primera medida tiene varios posibles contratiempos. A saber, quizas cambie la medicion segun la computadora que corre el programa, siendo una mas potente que la otra, o quizas depende del lenguaje en el que este escrito pero no del algoritmo en si. La segunda medida, por otro lado, es independiente a la computadora o al lenguaje, y vale para cualquier instancia del programa.
+
+Vamos a basarnos en un concepto importante para medir la complejidad: las operaciones elementales (OE). Estas van a ser instrucciones que vamos a considerar con tiempo 1 (no tiene unidad definida). El tiempo de un programa, entonces, será la suma de tiempos de cada instruccion.
+
+Un poco de notación: vamos a llamar \formula{T(n)} a la complejidad temporal para un tamaño de entrada \formula{n}, y por otro lado, \formula{S(n)} denotará la complejidad espacial para un tamaño de entrada \formula{n}. Finalmente, llamaremos \formula{t(S)} al tiempo que tarde en ejecutar el programa \formula{S}.
+
+De lo anterior se deducen las siguientes reglas:
+
+\begin{itemize}
+	\item \formula{t(\texttt{If C Then S1 Else S2 Endif;}) = t(C) + max\{ t(S1), t(S2)\}}
+	\item \formula{t(\texttt{Case C Of v1:S1 | v2:S2 | \ldots | vn:Sn End;}) = t(C) + max\{ t(S1), t(S2), \ldots , t(Sn)\}}
+	\item \formula{t(\texttt{While C Do S End;}) = t(C) + (n° de iteraciones)\times(t(C) + t(S))}
+	\item \formula{t(\texttt{MiFuncion(P1, P2, \ldots , Pn)}) = 1 + t(P1) + t(P2) + \ldots + t(Pn) + t(F)}
+\end{itemize}
+
+\textit{En el ultimo caso tenemos una llamada a función, donde toma n parametros, y hace la operación F.}
+
+Hay que tener una cosa mas en cuenta: entradas de mismo tamaño pueden tener medidas de tiempo diferentes. Por ejemplo, supongamos que queremos evaluar la complejidad de un algoritmo que busca un elemento en una lista, y lo que hace es chequear uno a uno entre los elementos y compararlos con el elemento en cuestión. Si la lista es mas larga, el algoritmo llevara mas tiempo en resolverse, salvo que el elemento este al principio de la lista. Es decir, si preguntamos por el primer elemento de la lista, por mas larga que esta sea, vamos a medir siempre el mismo tiempo (el minimo, en este caso).
+
+Es por esta situación que nos interesan tres casos particulares de la medición del tiempo: el caso \textit{peor}, el caso \textit{mejor} y el caso \textit{medio}. Podemos construirlos de la siguiente manera:
+
+\begin{itemize}
+	\item \formula{T_{peor}(n) = max_{instancias I, |I| = n} \{ t(I)\}}
+	\item \formula{T_{mejor}(n) = min_{instancias I, |I| = n} \{ t(I)\}}
+	\item \formula{T_{prom}(n) = \sum_{instancias I, |I| = n} \{ P(I)\times t(I)\}}
+\end{itemize}
+
+P(I) en este contexto representa la probabilidad de que un input sea la instancia I.
+
+\subsection{Análisis asintótico de la complejidad}
+
+En general, no nos interesa saber el tiempo \textit{exacto} de un algoritmo, sino que nos interesa ver su crecimiento. Es decir, nos interesa su \textit{orden de magnitud}. De esa forma, vamos a poder evaluar mas facilmente entre dos algoritmos que, a priori, tienen medidas distintas, pero quizas mismo orden de magnitud, o viceversa.
+
+Entonces, decimos que el orden (logarítmico, lineal, cuadrático, exponencial, etc) de la función \formula{T(n)} es el que expresa el comportamiento dominante cuando el tamaño de la entrada es grande. En otras palabras, es lo que nos interesa realmente.
+
+Como tal, lo que nos interesa es el \textit{análisis asintótico} de la complejidad, que es el comportamiento de la misma para valores de entrada suficientemente grandes. Nosotros vamos a aproximar estos valores con cotas (de ahi lo asintótico), las cuales denotamos:
+
+\begin{itemize}
+	\item[] \formula{O} (O grande) es la corta superior
+	\item[] \formula{\Omega} (omega) es la corta inferior
+	\item[] \formula{\theta} (theta) es el orden \textit{exacto} de la función
+\end{itemize}
+
+Estas cotas van a determinar los limites de la complejidad del algoritmo que estemos analizando. La notación \formula{f \in O(g)} indica que la función \formula{f} no crece más rápido que alguna función proporcional a \formula{g}. Estamos diciendo que \formula{O(g)} es un conjunto de funciones, y lo definimos como:
+
+\centrado{\formula{O(g) = \{ f|\exists n_{0}, k>0} tal que \formula{ n \geq n_{0} \longrightarrow f(n) \leq k \cdot g(n) \}}}
+
+Analogamente, definimos a \textit{omega} como:
+
+\centrado{\formula{O(g) = \{ f|\exists n_{0}, k>0} tal que \formula{ n \geq n_{0} \longrightarrow f(n) \geq k \cdot g(n) \}}}
+
+Finalmente, a \textit{theta} lo expresamos asi:
+
+\centrado{\formula{O(g) = \{ f|\exists n_{0}, k_{1}, k_{2}>0} tal que \formula{ n \geq n_{0} \longrightarrow k_{1} \cdot g(n) \leq f(n) \leq k_{2} \cdot g(n) \}}}
+
+Una vez teniendo estas definiciones podemos empezar a deducir muchas de las propiedades que vamos a utilizar a la hora de resolver ejercicios de complejidad. Aca listamos unas cuantas:
+
+\begin{itemize}
+	\item Si existe \formula{\lim\limits_{n\longrightarrow \infty} \frac{f(x)}{g(x)} = k}, y segun los valores de \formula{k}:
+	\begin{itemize}
+		\item[] Si \formula{k\neq 0} y \formula{k < \infty}, entonces \formula{\Omega(f) = \Omega(g)}, \formula{\theta(f) = \theta(g)} y \formula{O(f) = O(g)}
+		\item[] Si \formula{k = 0}, entonces \formula{\Omega(f) \neq \Omega(g)}, \formula{\theta(f) \neq \theta(g)} y \formula{O(f) \neq O(g)}
+	\end{itemize}
+	
+	\item Si \formula{f_{1} \in O(g)} y \formula{f_{2} \in O(h)} \formula{\Longrightarrow} \formula{f_{1} + f_{2} \in O(max\{ g, h\})}
+	
+	\item Si \formula{f_{1} \in O(g)} y \formula{f_{2} \in O(h)} \formula{\Longrightarrow} \formula{f_{1} \cdot f_{2} \in O(g \cdot h)}
+	
+	\item Si \formula{f_{1} \in \Omega(g)} y \formula{f_{2} \in \Omega(h)} \formula{\Longrightarrow} \formula{f_{1} + f_{2} \in \Omega(g + h)}
+	
+	\item Si \formula{f_{1} \in \Omega(g)} y \formula{f_{2} \in \Omega(h)} \formula{\Longrightarrow} \formula{f_{1} \cdot f_{2} \in \Omega(g \cdot h)}
+	
+	\item Si \formula{f_{1} \in \theta(g)} y \formula{f_{2} \in \theta(h)} \formula{\Longrightarrow} \formula{f_{1} + f_{2} \in \theta(g + h)}
+	
+	\item Si \formula{f_{1} \in \theta(g)} y \formula{f_{2} \in \theta(h)} \formula{\Longrightarrow} \formula{f_{1} \cdot f_{2} \in \theta(g \cdot h)}
+\end{itemize}
+
+Existen muchas propiedades mas, pero estas suelen ser las mas utiles.
+
+Ahora, ¿como se relaciona todo esto con la eficiencia de programas? Bueno, ahi es donde entra lo que definimos antes de la función \formula{T(n)}. Vamos a analizar estas funciones temporales en base a estas cotas, utilizando la notación antes mostrada. A saber, si tenemos que:
+
+\centrado{\formula{T_{peor} \in O(g)}}
+
+Decimos que el peor de los casos (la peor instancia de un tamaño \formula{n}), la función temporal \formula{T(n)} no va a superar a \formula{g(n)}. Es decir, es su cota superior. Podriamos hacer analisis similares con las distintas cotas, son bastante analogas. Tambien, podemos utilizar lo que vimos antes de los casos peor, mejor y promedio.
+
+Vamos a mencionar casos conocidos o que ya vimos y mostrar su correspondiente complejidad.
+
+Para empezar, tenemos el famoso caso de \textit{buscar un elemento en una lista}. Si la lista no tiene una forma de orden, nos va a ser muy dificil encontrar una forma \textit{eficiente} de encontrar un elemento en ella. Lo unico que podemos hacer es ir chequeando uno a uno, y compararlo con el elemento en cuestion. En el peor de los casos, terminamos chequeando todos los elementos (o bien el elemento esta en la ultima posicion de la lista, o bien ni siquiera pertenece). Eso quiere decir que, si la lista mide \formula{n}, podemos decir que el algoritmo de busqueda tiene una complejidad \formula{O(n)}, ya que es el peor de los casos. A su vez, el mejor de los casos es que el elemento si pertenezca, y este en la primera posicion. Por lo que podemos añadir que el algoritmo tiene \formula{\Omega(1)}.
+
+Ahora, supongamos que la lista esta ordenada. Por ejemplo, es una lista de numeros enteros y se encuentra ordenada de menor a mayor. En este caso podriamos llegar a provecharnos de esto y usarlo a nuestro favor. No hace falta chequear uno a uno cada elemento, podriamos dividir la lista a la mitad, y ver si el elemento que estamos buscando pertenece a una o a la otra. Para hacer esto, podriamos preguntar si el elemento es mayor que el valor del medio. Al estar la lista ordenada, podemos afirmar que esto nos separa la lista en dos, y que con ese dato ya sabemos a que mitad pertenece. Noten que esto se puede hacer repetidas veces hasta llegar al elemento en cuestion (si pertenece, en caso contrario, llegariamos a un numero al que no podriamos llegar, o lista vacia). Si hacen las cuentas que ahora no vamos a detallar, podemos llegar a que, en el peor de los casos, la complejidad de este algoritmo es de \formula{O(log_{2}(n))}, lo cual es mucho mejor que \formula{O(n)}. A este algoritmo se le conoce como \textit{busqueda binaria}.
+
+Como veran, el simple dato de que la lista esta ordenada, ya nos ayuda a agilizar el procedimiento. El problema ahora seria procurar que la lista siempre se encuentre ordenada.
+
+\newpage
+\section{Arboles}
+
+\subsection{Una estructura nueva}
+
+Existe una estructura de datos que es muy versatil y util, y es a la que le vamos a dedicar todo este capitulo. Volvamos al ejemplo de antes, el de buscar numeros en una lista que esta ordenada. Existen otras formas de representar (u ordenar, mejor dicho) estructuras que funcionen semejante a esta lista ordenada. Los que vamos a ver aca, como dice el titulo del capitulo, son los \textit{arboles}.
+
+Estos son estructuras que consisten de nodos (los numeros) y conexiones (flechitas que los unen). Visualmente los representamos asi:
+
+\begin{multicols}{2}
+	\arbolCentrado{1 -> {
+						4 -> {
+							2, 5, 3},
+						10}}
+
+	A cada "burbuja" la llamaremos \textit{nodo}, y las flechitas nos van a indicar las conexiones entre cada nodo. Decimos que un nodo es \textit{padre} de otro, cuando tiene una flecha que apunta a ese otro nodo. De igual manera, al segundo nodo lo llamaremos \textit{hijo} del primero. En el ejemplo de antes, 1 es padre de 4 y 10, y 4 tiene 3 hijos: el 2, el 5 y el 3.
+\end{multicols}
+
+A su vez, continuando la analogia con los \textit{arboles}, decimos que una \textit{rama} es cualquier nodo con algun padre que tenga por lo menos un hijo. A su vez, llamamos \textit{hoja} a los nodos que no poseen hijos. En el dibujo, diriamos que 2, 5 y 3 son hojas, y que 4 y 10 son ramas. Pero nos falta el 1, donde nace el arbol. A este nodo particular lo indicaremos como la \textit{raiz} del arbol. Entonces, 1 es nuestra raiz.
+
+Finalmente, otro dato que mas adelante nos va a resultar interesante es la \textit{profundidad} del arbol. Consiste basicamente en el largo de la rama mas larga, es decir, la cantidad de nodos que hay entre la raiz y la hoja mas lejana.
+
+A nosotros, con todo esto, nos interesa representar conjuntos. Por lo tanto, no nos interesan los arboles con valores repetidos, asi que vamos a evitarlos a toda costa. Vamos a centrarnos en los arboles con \textit{valores unicos}.
+
+A su vez, otra cosa que nos interesa es categorizar los arboles en tipos. Una forma de hacer esto es contando la cantidad \textit{maxima} de hijos. Es decir, cual es el nodo (o los nodos) con mas hijos. De esta forma, podriamos tener arboles \textit{binarios}, donde los nodos solo pueden tener 0, 1 o 2 hijos; o arboles \textit{ternarios}, donde llegan hasta 3; y asi podriamos seguir hasta lo que nos interese. En el ejemplo de antes, el arbol que dibujamos seria un arbol ternario, ya que el 4 tiene 3 hijos.
+
+En particular, vamos a estudiar el caso de los \textit{arboles binarios}, ya que tienen muchas propiedades que nos van a ser de utilidad.
+
+\subsection{Arboles Binarios de Busqueda}
+
+Existen infinitos arboles binarios. Por ejemplo, podriamos dibujar los arboles:
+
+\begin{multicols}{3}
+	\arbolCentrado{1 -> {
+						5 -> {3, 4},
+						7 -> {, 2}}}
+				
+	\arbolCentrado{100 -> {
+						50,
+						150 -> {, 200}}}
+				
+	\arbolCentrado{22 -> {
+						73 -> {21, 32},
+						43 -> {26, 53}}}
+\end{multicols}
+
+Ahora, como notaran, nos tenemos mucho control sobre el orden o la cantidad de hijos de cada nodo. Podriamos armarlos de manera super arbitraria, y de antemano no podriamos afirmar con certeza nada de ningun arbol.
+
+Es por eso que nos vamos a interesar en un tipo concreto de arbol binario: los \textit{arboles binarios de busqueda} (a veces escritos como ABB, por sus siglas), que son arboles que nos van a facilitar la busqueda de elementos, como su nombre bien indica.
+
+La logica detras de un arbol binario de busqueda es la siguiente: todo nodo va a tener a su izquierda numeros \textit{menores} a ese nodo, y a su derecha numeros \textit{mayores}. Viendo los arboles de antes podemos afirmar, entonces, que el arbol de en medio es un arbol binario de busqueda, y los otros dos no, ya que hay nodos mayores o menores por todos lados.
+
+Notemos que esta propiedad de busqueda se tiene que cumplir para \textit{todos} los nodos del arbol, no solamente la raiz. Por ejemplo, si tuvieramos el arbol:
+
+\begin{multicols}{2}
+	\arbolCentrado{100 -> {
+					50 -> {, 40},
+					150 -> {, 200}}}
+
+
+	\arbolCentrado{100 -> {
+					50 -> {40, },
+					150 -> {, 200}}}
+\end{multicols}
+
+El de la izquierda no seria un arbol binario de busqueda, ya que a la derecha del 50 hay un 40, por mas que el 40 se encuentre a la izquierda del 100. Para solucionar esto, tendriamos que ubicar el 40 a la izquierda del 50, y asi lograr acordar la definicion de los ABB, como es el caso del arbol de la derecha.
+
+¡Bien! Ya aprendimos lo que es un arbol binario de busqueda, ahora ¿que provecho podriamos sacarle? Bueno, esta es una respuesta muy interesante.
+
+Resulta que buscar un elemento en una estructura asi, es super facil. Lo primero que haremos es preguntarnos si el elemento que queremos averiguar es efectivamente la raiz. En un caso menos interesante, esto seria afirmativo, pero en el mas interesante pasariamos al paso dos. Nos preguntariamos si el elemento es mayor o menor que la raiz. Si es menor, bajaremos por la rama izquierda, y si es mayor, bajamos por la rama derecha. Y ahora volvemos a empezar, ¿es el elemento que estamos buscando el que ahora estamos viendo? Caso afirmativo, lo encontramos. Caso contrario, chequeamos si es mayor o menor, y bajamos a la rama adecuada. Si en algun momento llegamos a alguien que no tiene un hijo correspondiente (por ejemplo, el elemento es mas chico pero el nodo no tiene hijo izquierdo, o viceversa), quiere decir que el elemento no pertenece al arbol.
+
+De manera semejante, agregar un elemento es bastante sencillo. Solo hacemos el mismo recorrido que al buscar un elemento pero, cuando encontremos un \textit{espacio disponible}, metemos al elemento ahi. Es decir, le asignamos de padre al ultimo nodo que hayamos encontrado mayor o menor que el elemento nuevo. Obviamente, el nodo nuevo tiene que no pertenecer actualmente, ya que como dijimos antes, no queremos repetidos.
+
+Por ejemplo, si en el arbol de antes quisieramos ingresar el 75, el arbol nuevo seria:
+
+\arbolCentrado{100 -> {
+					50 -> {40, 75},
+					150 -> {, 200}}}
+
+El problema mas grande con estas estructuras parte de eliminar elementos. Una vez aclarado que el nodo pertenece y lo tengamos ubicado, vamos a tener tres posibles casos:
+
+\begin{itemize}
+	\item Que el nodo eliminado sea una hoja (no tenga hijos)
+	\item Que el nodo eliminado tenga un solo hijo
+	\item Que el nodo eliminado tenga dos hijos
+\end{itemize}
+
+El primero de los casos es el mas facil. Si el nodo que queremos eliminar se trata de una hoja, entonces solo necesitamos decirle a su padre que ya no lo apunte. Es decir, indicarle al nodo padre que, en esa direccion, ya no tiene un hijo.
+
+En el ejemplo de antes, si quisieramos borrar una hoja (por nombrar alguna, el 200), hariamos lo siguiente:
+
+\begin{multicols}{2}
+	\arbolCentrado{100 -> {
+						50 -> {40, 75},
+						150 -> {, 200}}}
+
+	\arbolCentrado{100 ->
+						{50 -> {40, 75},
+						150}}
+\end{multicols}
+
+En el caso donde el nodo tiene un unico hijo, tambien es relativamente sencillo. Lo que tenemos que hacer es \textit{saltearlo}, desde su padre hasta su propio hijo. Tambien podemos pensarlo como que, la rama que quedo "colgando" la \textit{subimos} para continuar el papel de su padre liminado.
+
+Continuando con el ejemplo, si quisieramos borrar el 150, que tiene de hijo al 200, hariamos:
+
+\begin{multicols}{3}
+	\arbol{100 -> {
+				50 -> {40, 75},
+				150 -> {, 200}}}
+
+	\arbol{100 -> {
+				50 -> {40, 75},
+				150 -> {, 200},
+				200}}
+
+	\arbol{100 -> {
+				50 -> {40, 75},
+				200}}
+\end{multicols}
+
+Y finalmente, el caso mas dificil, o realmente el mas largo: cuando el nodo eliminado tiene dos hijos. Escencialmente, lo que haremos sera reemplazar al nodo eliminado por su sucesor. Es decir, vamos a ver a los nodos en orden numerico y, para no romper la estructura interna del arbol, vamos a usar el nodo inmediatamente siguiente del que queremos eliminar.
+
+Para verlo con un ejemplo, en nuestro arbol de antes, queremos eliminar el 50. Su siguiente en este arbol es el 75, asi que escribimos 75 en el lugar del 50, y borramos el viejo 75.
+
+\begin{multicols}{3}
+	\arbol{100 -> {
+				50 -> {40, 75},
+				150 -> {, 200}}}
+
+	\arbol{100 -> {
+				"~75" -> {40, 75},
+				150 -> {, 200}}}
+
+	\arbol{100 -> {
+				75 -> {40, },
+				150 -> {, 200}}}
+\end{multicols}
+
+Es probable que ahora piensen "¿pero que pasa cuando el sucesor de un numero no es tan obvio? ¿cuando el arbol es mas grande o engorroso?". A lo que yo diria "que bueno que exista tambien un algoritmo para eso". Lo primero que hay que hacer, para buscar al sucesor, es preguntarnos si el nodo en cuestion tiene una rama derecha. Es decir, si hay numeros mas grandes por debajo de el. Si eso es afirmativo, entonces muy facil: simplemente buscamos el minimo de ese \textit{subarbol}. El sucesor de un numero es el minimo de los numeros mas grandes que el.
+
+Vamos a tener un problema cuando el nodo que queremos borrar no tiene rama derecha, aunque no es tan complicado. Basicamente, lo que haremos sera utilizar el mismo procedimiento de busqueda, el de pertenencia. Pero cada vez que estemos "parados" en un nodo, nos guardaremos ese nodo si es mas grande que el nodo que queremos eliminar. Si lo piensan, es la misma logica, buscar al minimo de los mas grandes que el propio nodo, solo que empezando desde la raiz del arbol.
+
+Como ven, la eliminación de elementos es un poco engorrosa, pero es un sacrificio que estamos dispuestos a pagar para que la busqueda o la inserción sean elegantemente eficaces.
+
+Ahora bien, si se dan cuenta, dado cualquier arbol de \formula{n} nodos, podemos empezar a calcular la complejidad de las distintas operaciones que venimos planteando. Por ejemplo, determinar si un elemento pertenece o no, en base al algoritmo antes mencionado, nos costaria en el peor de los casos \formula{O(n)}. ¿Cual es el peor de los casos? Un arbol donde solo se crece en una direccion, es decir, un arbol que su rama mas larga (su \textit{profundidad}) mide \formula{n}, como se ve en la imagen siguiente.
+
+\begin{multicols}{2}
+	En este arbol se puede ver que, si continuara indeterminadamente, nos costaria \formula{n} pasos, suponiendo que preguntamos por el nodo mas grande, o alguien que no pertence al arbol. Pasaria lo mismo si la rama creciera indefinidamente hacia la izquierda, es decir, si fueran elementos cada vez menores. El peor caso seguiria siendo el mismo.
+	
+	Notemos que a la hora de insertar un elemento, tenemos el mismo problema: nuestro peor caso seria querer ingresar un elemento al final.
+
+\arbolCentrado{1 -> 
+					{, 2 -> 
+						{, ". . ." -> 
+							{, "\formula{n}"
+							}
+						}
+					}
+	}
+\end{multicols}
+
+Lo que si nos complica mucho es la eliminación, donde claramente el peor de los casos es la situación del nodo eliminado teniendo dos hijos. Este calculo es algo mas dificil, pero si revisamos los pasos anteriores nos dara la misma situacion: \formula{O(n)}.
+
+Ahora bien, si recuerdan el capitulo anterior donde hablamos de las listas ordenadas, no parece que mejoramos mucho la situación. Es mas, parece que complicamos mas la estructura para obtener el mismo resultado. Pero resulta que esto es solamente la primera parte. Vamos a explorar un tipo concreto de arbol binario de busqueda, pero antes, tenemos que hablar del \textit{balanceo} de los arboles binarios.
+
+\subsection{Balanceo de los arboles binarios}
+
+Como vieron antes, necesitamos una forma de asegurar una estructura al arbol, ya que sino nos pueden molestar con arboles feos o que no sirven. Nuestro primer acercamiento a resolver este problema podria ser el de plantear un \textit{arbol completo}.
+
+Llamamos arbol completo a los arboles que todos sus nodos tienen 2 hijos, a exepcion de los del ultimo nivel, que tienen 0. Por ejemplo:
+
+\begin{multicols}{2}
+\arbolCentrado{
+	32 -> {
+		20 -> {19, 21},
+		43 -> {26, 53}}
+}
+
+Si sabemos que el arbol esta completo, podemos ver que se nos solucionan los problemas de complejidad de antes. Podemos afirmar que, a lo mucho, buscar un nodo tiene complejidad \formula{O(\log n)}. Pero tenemos un nuevo problema ahora: el de mantener completo al arbol. Imaginemos que queremos ingresar el elemento \formula{17} a este arbol, ¡vamos a tener que ingresar otros 7 nodos nuevos para que siga completo!
+\end{multicols}
+
+Por ende, decimos que mantener un arbol completo es \textit{caro}, en terminos de espacio y tiempo. Nota de vital importancia: vean que los nodos del "piso del fondo" son mas del \formula{50\%} de todo el arbol.
+
+Ahora bien, quizas no necesitamos que el arbol este totalmente completo, pero si lo \textit{suficientemente} completo. Basicmanete lo que queremos es que todas las ramas de un arbol tengan \textit{casi} la misma longitud. Pero, ¿como definimos este \textit{casi}?
+
+\arbolCentrado{
+	34 -> {
+		21 -> {
+			16 [draw=red] -> {
+				6 [draw=red] -> {
+					3, },
+				18},
+			30 [draw=red] -> {
+				28 [draw=blue] -> {
+					, 29},
+				32}
+		},
+		63 [draw=red] -> {
+			43 [draw=blue] -> {
+				37,
+				52 [draw=blue] -> {
+					, 57
+				}
+			},
+			72 [draw=blue] -> {
+				, 78}}
+		}
+}
+
+Llamamos a un arbol \textit{balanceado}, cuando para cualquier nodo en el, la diferencia de longitud entre sus ramas izquierda y derecha difiere, a lo sumo, en una unidad. Es decir, calculamos su \textit{factor de balanceo}, que consiste en \formula{A_{D} - A_{I}} (\formula{A_{x}} es la altura del subarbol \formula{x}), y vemos si nos da 1, 0 o -1.
+
+En el ejemplo de arriba, podemos ver los factores de balanceo de cada nodo en base a sus subarboles. Por un lado tenemos los nodos de color negro, que tienen factores de balanceo igual a 0, es decir, sus ramas mas largas izquierda y derecha miden lo mismo. Los de color rojo son los que tienen un factor de balanceo de -1, que significa que la rama izquierda es un nodo mas larga que la derecha. Finalmente, los azules tienen un factor de 1, lo que nos dice que la rama derecha es un nodo mas larga que la izquierda.
+
+Un arbol que cumple esta condición lo llamaremos \textit{árbol balanceado en altura}, o tambien conocido como AVL, por sus creadores (dos rusos a los que no voy a intentar escribir su nombre, por respeto y porque lo haria mal). El arbol antes visto, seria un AVL.
+
+Notemos que, volviendo a lo que nos interesa, si sabemos que tenemos un AVL, tenemos en claro que la altura del arbol siempre sera \formula{\log n}, ya que si fuera mas que eso el árbol dejaria de estar balanceado. Con este dato, ya podemos tener unas mejores complejidades a la hora de ejecutar nuestras operaciones, aunque tenemos una nueva dificultad: tenemos que mantener el arbol balanceado.
+
+Verificar si un nodo pertence no cambia, ya que no afectamos el contenido del arbol, solo lo vemos. El problema surje a la hora de querer agregar o eliminar un nodo.
+
+\subsection{Rotaciones}
+
+Si tenemos un arbol balanceado la primera parte de eliminar o insertar es exactamente identica a lo que vimos antes. El verdadero asunto arranca cuando tenemos que chequear que el balanceo se siga cumpliendo. Por ejemplo, supongamos que le queremos agregar el numero 2 al arbol de la izquierda, generando el de la derecha.
+
+\begin{multicols}{3}
+	\arbolCentrado{
+		10 -> {
+			5 -> {
+				3,		
+			},
+			12
+		}
+	}
+
+	\arbol{
+		10 -> {
+			5 -> {
+				3 -> {
+					2,
+				},		
+			},
+			12
+		}
+	}
+
+	El primero es facil notar que se encuentra balanceado, por mas que no esten pintados los factores de balanceo. Pero lo importante aca es ver que, al agregar el elemento nuevo, el balanceo se pierde, y por varias ramas.
+
+	La rama izquierda del 10 es 2 nodos mas larga que la derecha. Si lo piensan, al 5 le sucede lo mismo.
+\end{multicols}
+
+Y lo unico que hicimos fue agregar un unico elemento. Imaginense, si ya era complicado eliminar un nodo antes, como es ahora. Una manera de resolver esto podria ser estructurar al arbol de la siguiente manera:
+
+\begin{multicols}{2}
+	El arbol sigue siendo el mismo, tiene los mismos nodos, simplemente los distribuimos de otra manera. Este "arreglo" que le hicimos al arbol, se lo llama \textit{rotacion}, y es lo que vamos a ver en este capitulo.
+
+	Como se imaginaran, existen muchas rotaciones, y hay que saber cuales usar dependiendo la estructura del arbol que tengamos que rebalancear.
+
+	\arbolCentrado{
+		10 -> {
+			3 -> {
+				2,
+				5		
+			},
+			12
+		}
+	}
+\end{multicols}
+
+La idea de una rotación es reestructurar las ramas y los nodos, pero no perder el orden de quien es mayor que quien. Supongamos los siguientes arboles genericos, donde los nodos con letras simbolizan otros subarboles, y \formula{x} e \formula{y} valores cualesquiera:
+
+\begin{multicols}{5}
+	\textit{}
+
+	\arbolCentrado{
+		"\formula{x}" -> {
+			A [subArbol],
+			"\formula{y}" -> {
+				B [subArbol],
+				C [subArbol]
+			}
+		}
+	}
+	
+	\begin{tabular}{c}
+		\\
+	    \formula{rot\_ izq(x)}\\
+	    \formula{\longrightarrow}\\
+	    \\
+	    \formula{\longleftarrow}\\
+	    \formula{rot\_ der(y)}
+	\end{tabular}
+
+	\arbol{
+		"\formula{y}" -> {
+			"\formula{x}" -> {
+				A [subArbol],
+				B [subArbol]
+				},
+			C [subArbol]
+		}
+	}
+	
+	\textit{}
+\end{multicols}
+
+Notemos como siempre se verifica que \formula{A < x < B < y < C}, por lo que ambas estructuras representan exactamente al mismo arbol.
+
+Como se ve en la imagen, dado un nodo cualquiera (en la foto, el nodo \formula{x}), rotarlo hacia la izquierda seria tomar su hijo derecho, y hacerlo su padre izquierdo. Luego, reacomodar los subarboles de modo que se siga cumpliendo el orden de las desigualdades. Una rotacion a derecha, en este caso del nodo \formula{y}, consiste en la operacion inversa: tomar a su hijo izquierdo y convertirlo en su padre, de modo que su hijo derecho sea el nodo inicial. Luego reacomodar los subarboles.
+
+\small{ \textit{Nota del autor: Los nombres de izquierda y derecha tienen una logica, pero a mucha gente le hara sentido si tuvieran los nombres invertidos. Como tal, los nombres son arbitrarios, seria un debate filosofico si es mejor una notacion o la otra, el punto es que se entienda el concepto de rotacion.}}
+
+Volviendo al asunto relevante, la idea seria insertar el elemento nuevo, y verificar en la rama del nuevo elemento (ya que las demas no se vieron afectadas) si se rompio o no el balanceo del arbol. Si no se rompio, es nuestro dia de suerte, no hay que hacer nada. Si, por otro lado, encontramos al nodo donde el balanceo ya no es valido, necesitamos aplicar alguna rotacion o combinacion de rotaciones para que el arbol sea el mismo pero cambiando el balanceo.
+
+Para que analicen ustedes mismos, armamos la tabla de complejidades de distintas operaciones y estructuras.
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|}
+		\hline
+		& Pertenece & Insertar & Borrar\\
+		\hline
+		ABB & \formula{O(n)} & \formula{O(n)} & \formula{O(n)} \\
+		\hline
+		AVL & \formula{O(\log n)} & \formula{O(\log n)} & \formula{O(\log n)} \\
+		\hline
+	\end{tabular}
+\end{center}
+
+Se nota la mejora.
+
+\newpage
+\section{Estructuras mas complejas}
+
+\subsection{Heaps y colas de prioridad}
+
+Aqui no vimos lo que son las \textit{colas} y las \textit{pilas}. Basicamente son secuencias en las que, a la hora de sacar elementos, los sacamos siguiendo reglas especificas. No podemos preguntar por un indice o elemento particular, sino que obtendremos, en el caso de las colas, el primero en haber ingresado, y en el caso de las pilas, el último. Como la cola de un supermercado, el primero que llega, es el primero que sale. Y lo mismo al apilar platos, el primero de todos, va a ser el ultimo que saques.
+
+Ahora bien, estas son estructuras muy utiles, pero no las vamos a ver a fondo. Lo que nos interesa es un caso particular de las \textit{colas}, que son las \textit{colas de prioridad}. En lugar de devolvernos el elemento que se ingreso al principio, nos va a devolver el mayor de los elementos. O el menor, segun como lo configuremos. El punto es el mismo: independientemente del orden de ingreso de los elementos, las colas de prioridad siempre nos devuelven los elementos en orden ascendente (o al revez).
+
+Estas estructuras son muy utiles, pero es necesario tener acceso al maximo (o minimo) de una secuencia. Claramente podriamos hacerlo "a mano", teniendo una secuencia y siempre buscando el maximo, pero la complejidad nos quedaria siempre en \formula{O(n)}.
+
+Como seguro se estan imaginando, existe una estructura para bajar esa complejidad, y aunque parezca sorprendente, la reduce hasta \formula{O(1)}, y esa estructura, es el \textit{heap}.
+
+Un \textit{heap} se representa como un arbol binario, pero no es de busqueda. En este caso, las reglas para deisgnar un \textit{heap} son: 1) ser perfectamente balanceados; y 2) la clave de cada nodo debe ser mayor \textit{o igual} a la de sus hijos, si los tiene. Noten que esto deja de ser de busqueda porque, primero, permitimos igualdad, y segundo, no tenemos distincion entre hijo izquierdo y derecho, solo nos interesa que los hijos sean menores que el padre, pero no cual de los dos es mayor al otro.
+
+Con eso en cuenta, es facil ver que:
+
+\begin{multicols}{3}
+	\arbolCentrado{
+		67 -> {
+			54 -> {
+				40,
+				23
+			},
+			62 -> {
+				9,
+				22
+			}
+		}
+	}
+	\centrado{Esto es un heap}
+
+	\arbolCentrado{
+		67 -> {
+			,
+			62 -> {
+				9,
+				22
+			}
+		}
+	}
+	\centrado{Esto NO es un heap}
+
+	\arbolCentrado{
+		67 -> {
+			54 -> {
+				63 [draw=red],
+				23
+			},
+			90 [draw=red] -> {
+				9,
+				22
+			}
+		}
+	}
+	\centrado{Esto NO es un heap}
+\end{multicols}
+
+Nota aparte: a estos heaps en particular los llamamos \textit{max-heaps}, ya que tienen en la raiz al nodo mayor. Tambien existen los \textit{min-heaps}, que funcionan exactamente igual salvo porque la raiz es el nodo menor, y la regla pasa a ser que cada padre sea menor o igual a sus hijos.
+
+Las operaciones que queremos obtener con esto son: maximo (ver el maximo sin sacarlo), desencolar (obtener el maximo, sacandolo de la lista) y encolar (insertar un elemento).
+
+Empecemos por lo facil, la de \textit{maximo}. Claramente tenemos un acceso directo al maximo del heap, sea por un puntero o como sea la forma que lo hayamos implementado, pero lo debemos tener a mano siempre. Claramente esto termina siendo \formula{O(1)}.
+
+Ahora viene lo picante: \textit{desencolar}. Supongamos el heap que vimos antes:
+
+\arbolCentrado{
+		67 -> {
+			54 -> {
+				40,
+				23
+			},
+			62 -> {
+				9,
+				22
+			}
+		}
+	}
+
+Si desencolamos, lo primero que haremos sera retirar el 67, pero no podemos simplemente eliminarlo, asi que lo que haremos sera reemplazarlo con el nodo que este "de ultimo". En este caso, el ultimo es el 22, porque este arbol es \textit{izquierdista}. Llamamos \textit{izquierdista} a los arboles que vamos llenando de izquierda a derecha, y de igual manera, existen los \textit{derechistas}, que son iguales pero con la logica inversa. Por favor, se le pide al lector eliminar toda carga politica de estos nombres.
+
+Continuando, en nuestro caso el ultimo nodo es el 22, por lo que lo eliminamos (al no tener hijos, simplemente lo borramos), y lo ponemos de raiz, quedandonos:
+
+\arbolCentrado{
+		22 -> {
+			54 -> {
+				40,
+				23
+			},
+			62 -> {
+				9,
+			}
+		}
+	}
+
+Bien, seguimos teniendo un arbol balanceado, pero ahora tenemos un problema: tenemos que reacomodar el arbol para que se cumpla la regla de los heaps. Lo bueno es que este algoritmo es bastante sencillo.
+
+Primero vemos los dos hijos del 22, en este caso son 54 y 62, y nos preguntamos cual es mas grande de los dos. En particular, es el 62. Ahora verificamos si es mas grande que el 22, lo que es afirmativo, y los cambiamos de lugar. Luego repetimos el chequeo con los nuevos hijos del 22, asi hasta que tenga hijos que sean menores a el, o no los tenga. Graficamente, podemos ver que:
+
+\begin{multicols}{2}
+	\begin{center}
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+			\node[state] (q1)                      {$22$};
+			\node[state] (q2) [below right of=q1]  {$62$};
+			\node[state] (q3) [below left of=q1]   {$54$};
+			\node[state] (q4) at (0.5, -2)         {$9$};
+			\node[state] (q5) at (-1.5, -2)        {$40$};
+			\node[state] (q6) at (-0.5, -2)        {$23$};
+
+			\path[-]     (q1)  edge  node {} (q2);
+			\path[-]     (q1)  edge  node {} (q3);
+			\path[-]     (q2)  edge  node {} (q4);
+			\path[-]     (q3)  edge  node {} (q5);
+			\path[-]     (q3)  edge  node {} (q6);
+
+			\path[<->]   (q1)  edge  [bend left=60]  node {} (q2);
+		\end{tikzpicture}
+	\end{center}
+
+	\begin{center}
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+			\node[state] (q1)                      {$62$};
+			\node[state] (q2) [below right of=q1]  {$22$};
+			\node[state] (q3) [below left of=q1]   {$54$};
+			\node[state] (q4) at (0.5, -2)         {$9$};
+			\node[state] (q5) at (-1.5, -2)        {$40$};
+			\node[state] (q6) at (-0.5, -2)        {$23$};
+
+			\path[-]     (q1)  edge  node {} (q2);
+  			\path[-]     (q1)  edge  node {} (q3);
+  			\path[-]     (q2)  edge  node {} (q4);
+  			\path[-]     (q3)  edge  node {} (q5);
+  			\path[-]     (q3)  edge  node {} (q6);
+		\end{tikzpicture}
+	\end{center}
+\end{multicols}
+
+En este caso, el 22 quedaria ahi, ya que no es mas chico que el 9, y no tiene otro hijo con el que comparar. Por lo tanto, el heap nuevo tras haber eliminado el maximo quedaria asi. En esta operacion a lo mucho hacemos \formula{\log n} operaciones, por lo que concluimos con una complejidad de \formula{O(\log n)}
+
+Finalmente, veamos el caso de \textit{insertar}. Para este caso, supongamos que ahora, al arbol al que recien le eliminamos un nodo, le queremos meter el numero 47. Analogo a lo anterior, lo primero que hacemos es agregarlo al fondo, y luego lo comparamos con el padre para "corregir" su posicion. En nuestro ejemplo:
+
+\begin{multicols}{3}
+	\begin{center}
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+			\node[state] (q1)                      {$62$};
+			\node[state] (q2) [below right of=q1]  {$22$};
+			\node[state] (q3) [below left of=q1]   {$54$};
+			\node[state] (q4) at (0.5, -2)         {$9$};
+			\node[state] (q5) at (-1.5, -2)        {$40$};
+			\node[state] (q6) at (-0.5, -2)        {$23$};
+			\node[state] (q7) at (1.5, -2)         {$47$};
+
+			\path[-]     (q1)  edge  node {} (q2);
+			\path[-]     (q1)  edge  node {} (q3);
+			\path[-]     (q2)  edge  node {} (q4);
+			\path[-]     (q2)  edge  node {} (q7);
+			\path[-]     (q3)  edge  node {} (q5);
+			\path[-]     (q3)  edge  node {} (q6);
+		\end{tikzpicture}
+	\end{center}
+
+	\begin{center}
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+			\node[state] (q1)                      {$62$};
+			\node[state] (q2) [below right of=q1]  {$22$};
+			\node[state] (q3) [below left of=q1]   {$54$};
+			\node[state] (q4) at (0.5, -2)         {$9$};
+			\node[state] (q5) at (-1.5, -2)        {$40$};
+			\node[state] (q6) at (-0.5, -2)        {$23$};
+			\node[state] (q7) at (1.5, -2)         {$47$};
+
+			\path[-]     (q1)  edge  node {} (q2);
+			\path[-]     (q1)  edge  node {} (q3);
+			\path[-]     (q2)  edge  node {} (q4);
+			\path[-]     (q2)  edge  node {} (q7);
+			\path[-]     (q3)  edge  node {} (q5);
+			\path[-]     (q3)  edge  node {} (q6);
+
+			\path[<->]   (q2)  edge  [bend left=60]  node {} (q7);
+		\end{tikzpicture}
+	\end{center}
+
+	\begin{center}
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+			\node[state] (q1)                      {$62$};
+			\node[state] (q2) [below right of=q1]  {$47$};
+			\node[state] (q3) [below left of=q1]   {$54$};
+			\node[state] (q4) at (0.5, -2)         {$9$};
+			\node[state] (q5) at (-1.5, -2)        {$40$};
+			\node[state] (q6) at (-0.5, -2)        {$23$};
+			\node[state] (q7) at (1.5, -2)         {$22$};
+
+			\path[-]     (q1)  edge  node {} (q2);
+			\path[-]     (q1)  edge  node {} (q3);
+			\path[-]     (q2)  edge  node {} (q4);
+			\path[-]     (q2)  edge  node {} (q7);
+			\path[-]     (q3)  edge  node {} (q5);
+			\path[-]     (q3)  edge  node {} (q6);
+		\end{tikzpicture}
+	\end{center}
+\end{multicols}
+
+Si quisieramos insertar un elemento nuevo a un arbol que ya se encuentra lleno, simplemente añadimos un nodo como hijo izquierdo del nodo sin hijos de mas a la izquierda.
+
+Notemos que, en el peor de los casos, estas correcciones de posicion, las haremos hasta la raiz, si es que justo ingresamos un nuevo elemento mas grande que todos. En cuyo caso, hariamos una cantidad de correcciones igual a la altura del arbol, que es \formula{\log n}. Entonces, tenemos que insertar nos ocupa \formula{O(\log n)}
+
+Comparando las complejidades con nuestras anteriores estructuras obtenemos que:
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|c|}
+		\hline
+		& Pertenece & Insertar & Borrar & Buscar minimo & Borrar minimo\\
+		\hline
+		Lista Ordenada & \formula{O(\log n)} & \formula{O(\log n)} & \formula{O(n)} & \formula{O(1)} & \formula{O(1)} \\
+		\hline
+		ABB & \formula{O(n)} & \formula{O(n)} & \formula{O(n)} & \formula{O(n)} & \formula{O(n)}\\
+		\hline
+		AVL & \formula{O(\log n)} & \formula{O(\log n)} & \formula{O(\log n)} & \formula{O(\log n)} & \formula{O(\log n)}\\
+		\hline
+		Heap & \formula{O(n)} & \formula{O(\log n)} & \formula{O(n)} & \formula{O(1)} & \formula{O(\log n)} \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\subsection{Tries}
+
+Todo bien con estas estructuras medio raras y demas, pero tenemos imaginemos que queremos representar una lista de palabras. O una lista de numeros tan largos que, antes que ver el valor del numero, conviene ver las cifras del mismo. El concepto se va a entender mejor con el ejemplo de las palabras, asi que nos vamos a quedar con eso, pero se podria aplicar la misma idea a numeros y chequeos de cifra a cifra.
+
+Supongamos que tenemos la secuencia \formula{[hola, casa, caso]}. Podriamos represntarla con alguna de las estructuras anteriores, si, lo cual seria mas o menos dificil, pero, primero, tendriamos que inventarnos algun tipo de ordenamiento para palabras, y, segundo, seguiriamos con las mismas complejidades de antes. Pero existe una estructura que, para estos casos, la complejidad de busqueda es lineal, es decir \formula{O(1)}. Bueno, en realidad, bajo ciertos supuestos, pero lo vamos a ir viendo despacio. Primero presentemos la idea de los \textit{tries}.
+
+Continando con nuestro ejemplo, representar esa secuencia en un trie consistiria en escribir:
+
+\begin{multicols}{2}
+	Si se fijan, al ordenar la lista de esta forma para buscar una palabra en la lista dependemos exclusivamente del largo de la palabra, no del la cantidad de elementos en la misma. Esta es la magia de los \textit{tries}, que no tiene \formula{O(n)}, sino \formula{O(x)}, donde \formula{x} es el largo de la palabra a chequear. La misma logica sirve para insertar y demas.
+
+	Pero bueno, suficiente del ejemplo, vamos a lo concreto. Un \textit{trie} consiste en un arbol, no necesariamente binario, en el que la informacion se encuentra en las "flechas", y no en los nodos. A su vez, tenemos un diccionario o alfabeto donde se encuentran todos nuestros posibles simbolos o caracteres (en nuestro ejemplo, consisitia de todas las letras del abecedario), y se incluye un caracter especial para indicar que la palabra o secuencia de simbolos finalizo (en nuestro ejemplo, es el \formula{\$}).
+	
+	La unica regla a tener en cuenta, evidentemente es que el simbolo no pueda formar parte de las claves. Es decir, no podriamos incluir a la lista la palabra \formula{cas\$}, porque el ultimo simbolo se perderia.
+
+	\begin{center}
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+			\node[state] (q1)                      {};
+			\node[state] (q2) [below right of=q1]  {};
+			\node[state] (q3) [below left of=q1]   {};
+			\node[state] (q4) [below of=q2]        {};
+			\node[state] (q5) [below left of=q3]   {};
+			\node[state] (q6) [below of=q5]        {};
+			\node[state] (q7) [below of=q6]        {};
+			\node[state] (q8) [below of=q7]        {\formula{hola}};
+			\node[state] (q9) [below right of=q4]  {};
+			\node[state] (q10) [below of=q9]       {};
+			\node[state] (q11) [below left of=q4]   {};
+			\node[state] (q12) [below of=q11]       {};
+			\node[state] (q13) [below of=q12]       {\formula{cama}};
+			\node[state] (q14) [below of=q10]       {\formula{caso}};
+
+			\path[-]     (q1)  edge  node {c} (q2);
+			\path[-]     (q1)  edge  node {h} (q3);
+			\path[-]     (q2)  edge  node {a} (q4);
+			\path[-]     (q3)  edge  node {o} (q5);
+			\path[-]     (q5)  edge  node {l} (q6);
+			\path[-]     (q6)  edge  node {a} (q7);
+			\path[-]     (q7)  edge  node {\$} (q8);
+			\path[-]     (q4)  edge  node {s} (q9);
+			\path[-]     (q9)  edge  node {o} (q10);
+			\path[-]     (q4)  edge  node {m} (q11);
+			\path[-]     (q11)  edge  node {a} (q12);
+			\path[-]     (q12)  edge  node {\$} (q13);
+			\path[-]     (q10)  edge  node {\$} (q14);
+		\end{tikzpicture}
+	\end{center}
+\end{multicols}
+
+Ahora, quizas esten pensando \textit{vos dijiste que ibamos a tener un algoritmo lineal, esto no depende de la entrada, pero lineal no es, Tomi, nos mentiste}, pero ¡no menti!. La suposicion que podemos hacer aca, es que en nuestro alfabeto español no existen palabras de mas de cierta cantidad de letras. No lo voy a chequear, pero supongamos que la palabra mas larga es de 25 letras, entonces sabemos que como maximo tenemos una complejidad de \formula{O(25)}, que como sabemos es identico a \formula{O(1)}. Por lo que, efectivamente, un \textit{trie} tiene complejidad lineal.
+
+Obviando el tema de la complejidad, seria valido preguntarnos que podemos describir o representar con esto de los \textit{tries}, ya que si solo pudieramos listas de palabras o numeros largos tampoco le sacariamos tanto provecho. Pero si recuerdan, hay una estructura a la que le viene como anillo al dedo este concepto: los \textit{diccionarios}.
+
+Piensen que, recorremos el arbol siguiendo una palabra concreta (por ejemplo, \formula{cama}). Primero pasariamos por la raiz, y buscamos la rama con la primera letra, es decir, la \formula{c}. Luego vamos al siguiente nodo, y repetimos la operacion. Asi hasta llegar al simbolo reservado. En nuestro ejemplo, cuando llegamos al final, en el ultimo nodo tenemos la palabra escrita (\formula{casa}), pero podriamos haber tenido otra cosa guardada ahi. Si se dan cuenta, este es exactamente la funcionalidad de los diccionarios: tenemos claves (las palabras con las que nos movemos en el trie) y los significados (las hojas que le siguen al simbolo reservado). Si representamos asi a los diccionarios, tendriamos una complejidad de busqueda increiblemente baja, aparte de que podriamos guardar la cantidad de claves que queramos y conservar la complejidad.
+
+Para continuar con el ejemplo, si tenemos el diccionario \formula{\{ hola : 1, cama : 2, caso : 4\}}, simplemente reemplazariamos en los nodos hoja los valores numericos correspondientes.
+
+Aunque parezca sorprendente, esta estructura se puede optimizar todavia mas. Fijense que, en muchas ocasiones hay \textit{redundancias}. Es decir, hay veces donde podriamos compactar varios nodos en una unica rama. Por ejemplo, el caso de \formula{cama} y \formula{caso}. Veamos que ambos comparten la primera parte de la palabra (\formula{ca}), y no hay mas palabras, por ahora, que se bifurquen de ahi. Podriamos crear una unica rama con la clave \formula{ca}, y ahorrarnos un nodo de busqueda.
+
+Si repetimos este procedimiento para todos los nodos, podriamos formar el siguiente trie:
+
+\begin{multicols}{2}
+	\begin{center}
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+			\node[state] (q1)                      {};
+			\node[state] (q2) [below left of=q1]   {};
+			\node[state] (q3) [below of=q2]        {\formula{hola}};
+			\node[state] (q4) [below right of=q1]  {};
+			\node[state] (q5) [below left of=q4]   {};
+			\node[state] (q6) [below right of=q4]  {};
+			\node[state] (q7) [below of=q5]        {\formula{cama}};
+			\node[state] (q8) [below of=q6]        {\formula{caso}};
+
+			\path[-]     (q1)  edge  node {hola} (q2);
+			\path[-]     (q2)  edge  node {\$}   (q3);
+			\path[-]     (q1)  edge  node {ca}   (q4);
+			\path[-]     (q4)  edge  node {ma}   (q5);
+			\path[-]     (q4)  edge  node {so}   (q6);
+			\path[-]     (q5)  edge  node {\$}   (q7);
+			\path[-]     (q6)  edge  node {\$}   (q8);
+		\end{tikzpicture}
+	\end{center}
+	\centrado{Trie de antes modificado}
+
+	\begin{center}
+		\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+			\node[state] (q1)                      {};
+			\node[state] (q2) [below left of=q1]   {};
+			\node[state] (q3) [below of=q2]        {\formula{1}};
+			\node[state] (q4) [below right of=q1]  {};
+			\node[state] (q5) [below left of=q4]   {};
+			\node[state] (q6) [below right of=q4]  {};
+			\node[state] (q7) [below of=q5]        {\formula{2}};
+			\node[state] (q8) [below of=q6]        {\formula{4}};
+
+			\path[-]     (q1)  edge  node {hola} (q2);
+			\path[-]     (q2)  edge  node {\$}   (q3);
+			\path[-]     (q1)  edge  node {ca}   (q4);
+			\path[-]     (q4)  edge  node {ma}   (q5);
+			\path[-]     (q4)  edge  node {so}   (q6);
+			\path[-]     (q5)  edge  node {\$}   (q7);
+			\path[-]     (q6)  edge  node {\$}   (q8);
+		\end{tikzpicture}
+	\end{center}
+	\centrado{Uso de trie para un diccionario}
+\end{multicols}
+
+Que claramente es mucho mas chico que el anterior, lo que significa menos tiempo de busqueda y menos espacio de memoria utilizado.
+
+Ahora bien, veamos por arriba los algoritmos clasicos. El de busqueda ya lo vimos, basicamente vamos iterando en las letras que coincidan hasta que encontremos el simbolo reservado, y si en algun momento no podemos seguir avanzando o no encontramos el simbolo, significa que la palabra no se encuentra en el trie.
+
+Por otro lado, la insercion consiste en, de igual manera, iterar por las letras que coincidan, pero cuando no podamos continuar (porque nos faltan letras o porque tenemos que "separar" una rama con mas de una letra), agregamos esa rama nueva y creamos nuestros propios nodos.
+
+Si quisieramos agregar a nuestro trie de antes la palabra \formula{cacao}, quedaria asi:
+
+\begin{center}
+	\begin{tikzpicture}[>=stealth',shorten >=1pt,auto,node distance=1.5cm]
+		\node[state] (q1)                      {};
+		\node[state] (q2) [below left of=q1]   {};
+		\node[state] (q3) [below left of=q2]   {\formula{hola}};
+		\node[state] (q4) [below right of=q1]  {};
+		\node[state] (q6) [below of=q4]        {};
+		\node[state] (q5) [left of=q6]         {};
+		\node[state] (q7) [below of=q5]        {\formula{cama}};
+		\node[state] (q8) [below of=q6]        {\formula{caso}};
+		\node[state] (q9) [right of=q6]        {};
+		\node[state] (q10) [below of=q9]       {\formula{cacao}};
+
+		\path[-]     (q1)  edge  node {hola} (q2);
+		\path[-]     (q2)  edge  node {\$}   (q3);
+		\path[-]     (q1)  edge  node {ca}   (q4);
+		\path[-]     (q4)  edge  node {ma}   (q5);
+		\path[-]     (q4)  edge  node {so}   (q6);
+		\path[-]     (q5)  edge  node {\$}   (q7);
+		\path[-]     (q6)  edge  node {\$}   (q8);
+		\path[-]     (q4)  edge  node {cao}  (q9);
+		\path[-]     (q9)  edge  node {\$}   (q10);
+	\end{tikzpicture}
+\end{center}
+
+\newpage
+\section{Sorting}
+
+\subsection{Tecnicas de ordenamiento}
+
+Como vimos antes, lo que siempre se busca en general son algoritmos rapidos o que consuman poco espacio. Ese suele ser un problema recurrente en la computación. Una de las cosas que mas se hace al programar es utilizar listas, o arreglos, y buscar elementos. Existen muchas formas de representarlos y aprovecharnos de eso, como ya mostramos, pero hay un metodo que supera todas las complejidades de busqueda de antes: la \textit{busqueda binaria}. Ya lo explicamos al final del capitulo 6, justo antes de saltar a los arboles.
+
+A lo que queremos llegar es que solo sabiendo que la lista esta ordenada, ya podemos reducir el tiempo de busqueda mucho. Por lo tanto, nos interesa ser capaces de ordenar listas, ya que no siempre vamos a poder darnos el lujo de tener un AVL o un heap, aparte de que no son precisamente faciles de diseñar.
+
+Por eso mismo, esta ultima parte va a consistir en ver y comparar distintos metodos de ordenar listas. Vamos a dar por hecho que son listas de numeros, pero se puede aplicar la misma logica a cualquier tipo de dato comparable.
+
+\subsection{Selection sort}
+
+El primer algoritmo que vamos a ver es uno de los mas intuitivos y el que, probablemente, la gente utilice en la vida cotidiana a la hora de ordenar cosas en la vida real.
+
+Consiste en buscar el minimo y ponerlo primero. Luego, buscamos el minimo de lo que nos queda de la lista, es decir, todo salvo la primera posicion. Ese minimo seria el segundo elemento, y lo ponemos donde va, "arrastrando" todo lo demas una posicion. Repetimos este proceso, hasta llegar al final de la lista.
+
+La verdad que no tiene mucha mas profundidad que esa. Dano que buscar el minimo en una lista tiene costo \formula{O(n)}, y que estamos buscando el minimo de una lista cada vez mas pequeña, el costo en tiempo de este algoritmo lo podemos escribir como:
+
+\begin{large}
+\centrado{\formula{\sum\limits_{i=0}^{n-2} (n - i - 1) = \sum\limits_{i=1}^{n-1} i = \frac{n(n-1)}{2}}}
+\end{large}
+
+Si hacemos la cuenta, podemos ver que terminamos teniendo una complejidad de \formula{O(n^{2})}, es decir, de orden cuadratico.
+
+Lo que hace particularmente lento a este algoritmo es el hecho de que, por mas que este ordendo completa o parcialmente, va a continuar haciendo todo los chequeos de todas formas. Eso quiere decir, buscar el minimo de cada subsecuencia, por mas que ya este ordenado, o que tras haber hecho unos pocos cambios, lo que quede de la lista ya se encuentre ordenada. Podriamos modificar el algoritmo para que haga estos chequeos y ahorrarnos un poco de tiempo, pero en casos de verdadero desorden, eso simplemente nos haria la tarea mas lenta.
+
+\subsection{Insertion sort}
+
+Este algoritmo es \textit{un poquito} mejor que el anterior, pero no mucho.
+
+Consiste en iterar sobre la lista y, comparar ese i-esimo elemento con todos los elementos anteriores. Lo que haremos con estas comparaciones es ponerlo "donde va" entre los elementos que ya ordenados. Asi es, lo que procuramos con este algoritmo es que, lo que ya revisamos, esta ordenado. No quiere decir que los elementos esten en sus posiciones finales, significa que se encuentran \textit{relativamente} ordenados.
+
+Por ejemplo, si tuvieramos la lista \formula{[1,2,4,5,3]}, lo que deberiamos hacer, al llegar a la posicion del 3 es:
+
+\begin{center}
+	\begin{tabular}{c c c c c c c c c}
+		\begin{tabular}{|c|}
+			\hline \\
+			1 \\
+			\hline \\
+			2 \\
+			\hline \\
+			4 \\
+			\hline \\
+			5 \\
+			\hline \\
+			3 \\
+			\hline
+		\end{tabular} &
+	
+		\formula{\longrightarrow} &
+
+		\begin{tabular}{|c|}
+			\hline \\
+			1 \\
+			\hline \\
+			2 \\
+			\hline \\
+			4 \\
+			\hline \\
+			5 \\
+			\hline \\
+			\\
+			\hline
+		\end{tabular} &
+		
+		\formula{\longrightarrow} &
+
+		\begin{tabular}{|c|}
+			\hline \\
+			1 \\
+			\hline \\
+			2 \\
+			\hline \\
+			4 \\
+			\hline \\
+			\\
+			\hline \\
+			5 \\
+			\hline
+		\end{tabular} &
+	
+		\formula{\longrightarrow} &
+	
+		\begin{tabular}{|c|}
+			\hline \\
+			1 \\
+			\hline \\
+			2 \\
+			\hline \\
+			\\
+			\hline \\
+			4 \\
+			\hline \\
+			5\\
+			\hline
+		\end{tabular} &
+	
+		\formula{\longrightarrow} &	
+	
+		\begin{tabular}{|c|}
+			\hline \\
+			1 \\
+			\hline \\
+			2 \\
+			\hline \\
+			3 \\
+			\hline \\
+			4 \\
+			\hline \\
+			5 \\
+			\hline
+		\end{tabular}
+	\end{tabular}
+\end{center}
+
+Si nos ponemos a hacer las cuentas, que son semejantes a las del \textit{selection sort}, llegariamos al siguiente resultado:
+
+\begin{large}
+\centrado{\formula{\sum\limits_{i=1}^{n-1} (i - 1) = \frac{(n-1)(n-2)}{2}}}
+\end{large}
+
+De lo que concluiriamos lo mismo: este algoritmo tambien es de orden cuadratico, es decir, tiene complejidad \formula{O(n^{2})}. Pero si ignoramos el orden y vemos la cuenta especifica, este algoritmo es \textit{un poquito} mejor.
+
+\subsection{Merge sort}
+
+La verdad que estos algoritmos no fueron muy alentadores, pero es posible bajar la complejidad. Eso si, el algoritmo no es nada lindo, o mejor dicho, es super eficiente, pero dificil de implementar.
+
+\begin{multicols}{2}
+	La idea basica radica en el concepto de \textit{divide and conquer} (o \textit{divide y conquistaras}), que consiste en separar un problema grande en varios problemas pero mas chicos o faciles de resolver. Llevado al mundo del ordenamiento, el plan es el siguiente: dividi la lista a la mitad, y ordena cada mitad por separado. Una vez las tengas ordenadas, combinalas (\textit{merge}, en ingles) ordenadamente. Lo bueno de este algoritmo, es que podemos plantearlo recursivamente, teniendo en cuenta que toda lista la podemos dividir a la mitad. Bueno, todas, salvo las de un unico elemento, pero esas ya estan ordenadas. Muy conveniente para un caso base.
+
+En el dibujo de la derecha se puede ver graficamente una implementacion del \textit{merge sort} con la lista \formula{[6,2,9,5]}, donde se ordena y finaliza siendo \formula{[2,5,6,9]}.
+
+	\begin{center}
+		\begin{tikzpicture}
+			[nodoLista/.style={rectangle, draw=black}, >=stealth',auto,node distance=1.5cm]
+
+			\node[nodoLista, rectangle split, rectangle split horizontal, rectangle split parts=4] (q1) {6 \nodepart{two} 2 \nodepart{three} 9 \nodepart{four} 5};
+	
+			\node[nodoLista, rectangle split, rectangle split horizontal, rectangle split parts=2] (q2) [below left of=q1] {6 \nodepart{two} 2};
+	
+		\node[nodoLista, rectangle split, rectangle split horizontal, rectangle split parts=2] (q3) [below right of=q1] {9 \nodepart{two} 5};
+	
+			\node[nodoLista] (q4) at (-2,-3) {6};
+			\node[nodoLista] (q5) at (-0.5,-3) {2};
+			\node[nodoLista] (q6) at (0.5,-3) {9};
+			\node[nodoLista] (q7) at (2,-3) {5};
+	
+			\node[nodoLista, rectangle split, rectangle split horizontal, rectangle split parts=2] (q8) at (-1.3, -4.5) {2 \nodepart{two} 6};
+	
+			\node[nodoLista, rectangle split, rectangle split horizontal, rectangle split parts=2] (q9) at (1.3, -4.5) {5 \nodepart{two} 9};
+	
+			\node[nodoLista, rectangle split, rectangle split horizontal, rectangle split parts=4] (q10) at (0, -6) {2 \nodepart{two} 5 \nodepart{three} 6 \nodepart{four} 9};
+	
+			\path[->]     (q1)  edge  node {split} (q2);
+			\path[->]     (q1)  edge  node {}      (q3);
+			\path[->]     (q2)  edge  node {split} (q4);
+			\path[->]     (q2)  edge  node {}      (q5);
+			\path[->]     (q3)  edge  node {split} (q6);
+			\path[->]     (q3)  edge  node {}      (q7);
+	
+			\path[->]     (q4)  edge  node {}      (q8);
+			\path[->]     (q5)  edge  node {merge} (q8);
+			\path[->]     (q6)  edge  node {}      (q9);
+			\path[->]     (q7)  edge  node {merge} (q9);
+			\path[->]     (q8)  edge  node {merge} (q10);	
+			\path[->]     (q9)  edge  node {}      (q10);
+		\end{tikzpicture}
+	\end{center}
+\end{multicols}
+
+La cuenta es muy larga y fea para hacerla aca, pero, basandonos en la idea recursiva, el tiempo que tarda el programa se puede escribir como:
+
+\centrado{
+\formula{T(n) = 
+     \begin{cases}
+       O(1) &\quad\text{si } n = 1\\
+       2T(\frac{n}{2}) + O(n - 1) &\quad\text{si } n > 1
+     \end{cases} 
+}}
+
+Y si hacemos un exhaustivo analisis de calculo sobre la formula y el comportamiento del algoritmo, llegamos a que la complejidad del mismo es de \formula{O(n \log (n))}.
+
+Una nota aparte, pero relevante para el caso, es que si se dan cuenta esto de partir siempre la lista a la mitad esta muy bueno y se puede, siempre y cuando la lista tenga una cantidad par de elementos. El mejor caso seria que nuestra lista tenga \formula{n = 2^{k}} elementos, pero normalmente no podemos dar por sentado eso. Cuando tenemos una cantidad de elementos que no cumple esto, lo mejor seria separar la secuencia "a mano" de modo que se acerque a la potencia de 2 mas cercana.
+
+Por ejemplo, si tuvieramos una lista con 12 elementos, seria mucho mejor dejar los ultimos 4 por un lado, y quedarnos con una lista de 8 elementos por el otro. Y si fuera impar, por ejemplo, 13 elementos, hariamos lo mismo y nos quedariamos con uno de 5 y otro de 8. Ahora repetimos la logica con la lista de 5, llegando a 4 que es una potencia de 2. Como ven, existe una solucion para estos casos.
+
+\subsection{Quick sort}
+Este sorting tiene complejidad identica a los casos primeros (a saber, \formula{O(n^{2})}), pero es uno de los mas usados aun asi. Esto tiene que ver con el hecho de que en los casos promedio la complejidad baja a \formula{O(n \log (n))}.
+
+Primero partimos de una premisa algo exagerada, pero sirve para el ejemplo. Supongamos que conocemos el elemento mediano del arreglo (el que separa en dos mitades iguales, o casi). En ese caso, semejante a lo explicado con el \textit{merge sort}, podemos separar la lista en dos: por un lado los elementos que son menores a esa mediana, y por el otro los que son mayores. Una vez hecho esto, podemos repetir el proceso en cada mitad, buscando su mediana, y separando esas listas en dos mitades, a las cuales ordenamos, y asi sucesivamente. Finalmente, unimos todo y terminamos con una lista completamente ordenada.
+
+Como podran imaginar, este algoritmo es buenisimo siempre que sepamos quien es la mediana. Ahora, supongamos que no conocemos la mediana (que es lo que va a pasar casi siempre). Entonces, vamos a tener que elegir a algun elemento como punto medio para partir la lista. Aca tenemos un problema grave, ya que la eleccion de este pivot es clave. 
+
+Supongamos que elegimos el elemento mas chico como pivot. Terminariamos por poner todos los elementos a su derecha, ya que al ser el minimo todos van a ser mayores a el. Esto no ordena nada, de hecho, deja todo como estaba.
+
+Por eso, aunque parezca poco logico, lo mejor para elegir el pivote, es elegirlo al azar. La probabilidad de elegir justo el elemento minimo es \formula{\frac{1}{n}}, identica a la probabilidad de elegir al mayor. Por otro lado, la probabilidad de elegir cualquier elemento que no sea ni el maximo ni el minimo es de \formula{\frac{(n-2)}{n}}, que es bastante.
+
+Es por esto que se dice que, en el caso promedio, y bajo una buena eleccion de pivote, nuestros tiempos de ordenamiento no suben radicalmente.
+
+\subsection{Menciones honorificas}
+Vamos a mencionar dos metodos mas de ordenamiento que, quizas no se usen tan seguido, pero son interesantes y sirven para ver la variedad de algoritmos que existen. Puntualmente, vamos analizar el \textit{bubble sort} y el \textit{heap sort}.
+
+Vamos con el \textit{bubble sort} primero. Para este algoritmo lo que haremos sera recorrer la lista e ir comparando los elementos "de a dos". El primero con el segundo, luego el segundo con el tercero, y asi sucesivamente. La idea seria, cuando encontramos a alguien mas grande que el elemento que tiene a su derecha, los intercambiamos de lugar. Es decir, si un elemento en la posicion \formula{i} es mas grande que el que se encuentra en la posicion \formula{i+1} los intercambiamos entre si.
+
+Tras la primer corrida del algoritmo, el elemento mas grande terminaria en la ultima posicion, ya que efectivamente va a ser mas grandes que todos los que tiene despues. La siguiente parte del algoritmo es repetir lo mismo, una y otra vez, una cantidad de veces igual a la cantidad de elementos de la lista. Por este mismo paso, la "doble iteracion", por decirle de algun modo, nos genera una complejidad de \formula{O(n^{2})}.
+
+Este algoritmo no es muy bueno, pero es tierno. Al menos lo intenta.
+
+Por otro lado, tenemos al \textit{heap sort}. Partamos de la base de que podemos representar un heap, o bien \textit{heapificamos} un arreglo, o bien el contexto del programa ya nos lo venia pidiendo, o lo que sea. Tenemos nuestra lista de elementos ordenada o con la estructura interna de un heap. Bien, esa es la parte dificil.
+
+Si tenemos un heap, ordenar la lista es bastante sencillo, ya que un heap siempre nos puede devolver el maximo (o el minimo) con una complejidad bastante baja. Eso quiere decir que podemos ir desencolando el maximo y meterlo en el final de otro arreglo (o el mismo heap si procuramos que no se desarme). Vamos "de atras hacia adelante", pidiendo los mas grandes y tirandolos al fondo. Semejante al \textit{selection sort}, pero aca la idea radica en implementar un heap, por su facilidad de encontrar al maximo.
+
+Las complejidades y propiedades de estos algoritmos se ven al final del capitulo, comparadas con los demas.
+
+\subsection{Estabilidad del ordenamiento}
+
+Existe un concepto que no mencionamos hasta ahora que es el de \textit{estabilidad}.
+
+Cuando nosotros ordenamos elementos en una lista, a veces nos interesa que estos elementos mantengan su \textit{orden relativo original}. Quizas tenemos dos o mas criterios de ordenamiento, y queremos reordenar la lista sin perder el orden previamente establecido.
+
+Un ejemplo comun de esto, pueden ser datos varios en cualquier tabla como las de excell. Supongamos que el profesor quiere ordenar a sus alumnos por nota, porque quiere establecer un nuevo criterio de promocion o lo que sea. Ahora, va a haber muchos empates en ese criterio, puede haber muchos que se sacaron un 10, otros tantos un 9, y asi sucesivamente. En este ejemplo solo hay 10 numeros para elegir, y quizas tenemos mas de 200 alumnos.
+
+Ahora bien, resulta que la lista de alumnos, previo a ser ordenada por nota, esta ordenada alfabeticamente. Primero esta Alvarez, luego Benitez, y asi. El profesor no quiere perder ese orden al ponerse a ordenar en base a la nota, por lo que quiere que la lista quede ordenada por nota, pero en caso de empate, mantener el orden alfabetico.
+
+Bueno, esto lo podria hacer a mano, lo cual es un delirio personalmente, pero si, es posible. Pero tambien, podria usar algunos de los algoritmos que vimos antes. Veran, como dijimos antes, hay algoritmos que son \textit{estables}, es decir, que no van a romper ese criterio previamente establecido.
+
+Un "algoritmo" que sirve para ordenar listas con muchos criterios de orden es el llamado \textit{radix}, que consiste en ordenar primero por el criterio menos relevante con cualquier algoritmo, y luego el mas relevante con un algoritmo estable, para no perder el orden anterior. Digo \textit{algoritmo} entre comillas porque no es un metodo de ordenamiento como tal, sino una forma de mantener los distintos criterios de ordenamiento.
+
+De los que vimos, en particular, los algoritmos estables son \textit{insertion}, \textit{merge} y \textit{bubble}, y los demas son no estables.
+
+Todas las complejidades de estos algoritmos, para ir haciendo un resumen de lo visto, se pueden ver comparadas en la siguiente tabla:
+
+\begin{center}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		Nombre & Mejor caso & Caso promedio & Caso peor & Es estable \\
+		\hline
+		\textit{Selection} & \formula{O(n^{2})} & \formula{O(n^{2})} & \formula{O(n^{2})} & No\\
+		\hline
+		\textit{Insertion} & \formula{O(n)} & \formula{O(n^{2})} & \formula{O(n^{2})} & Si\\
+		\hline
+		\textit{Merge} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & Si\\
+		\hline
+		\textit{Quick} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & \formula{O(n^{2})} & No\\
+		\hline
+		\textit{Bubble} & \formula{O(n)} & \formula{O(n^{2})} & \formula{O(n^{2})} & Si\\
+		\hline
+		\textit{Heap} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & \formula{O(n \log (n))} & No\\
+		\hline
+	\end{tabular}
+\end{center}
+
+
+\end{document}

@@ -1,0 +1,182 @@
+\usepackage{listings} % Codigo
+\usepackage{multicol} % Muchas columnas
+
+\usepackage{tikz}
+\usetikzlibrary{graphs,graphdrawing,arrows.meta, calc} % Arboles binarios
+\usegdlibrary{trees}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{automata, arrows}
+
+\newcommand{\In}{\textit{in }}
+\newcommand{\Out}{\textit{out }}
+\newcommand{\Inout}{\textit{inout }}
+
+\newcommand{\tocarEspacios}{%
+	\addtolength{\leftskip}{3em}%
+	\setlength{\parindent}{0em}%
+}
+
+\newcommand{\comentario}[1]{$/*$ \textit{#1} $*/$}
+
+\newenvironment{proc}[2]{
+
+	\newcommand{\requiere}[1]{
+		\texttt{requiere} $\{$ ##1 $\}$
+	}
+
+	\newcommand{\asegura}[1]{
+		\texttt{asegura} $\{$ ##1 $\}$
+	}
+
+	\paragraph{} \vspace*{-5mm}
+	\vspace{1ex}
+	\texttt{proc} \textit{#1}(#2)$\{$
+	\par
+	\tocarEspacios
+}
+{
+
+\hspace{2.5mm} $\}$
+\vspace{2ex}
+}
+
+
+\newenvironment{tad}[1]{
+	\paragraph{} \vspace*{-4mm}
+	\newcommand{\obs}[2]{\texttt{obs} ##1 : ##2}
+
+	\vspace{1ex}
+	\texttt{TAD} \textit{#1} $\{$
+	\par
+	\tocarEspacios
+}
+{
+
+\hspace{2.5mm} $\}$
+\vspace{2ex}
+}
+
+
+\newenvironment{pred}[2]{
+	\paragraph{}\vspace*{-4mm}
+	\vspace{1ex}
+	\texttt{pred} \textit{#1} ( #2 ) $\{$
+	\par
+	\tocarEspacios
+}
+{
+
+\hspace{2.5mm} $\}$
+\vspace{2ex}
+}
+
+
+\newcommand{\aux}[4]{\vspace{2pt} \texttt{aux} \textit{#1} (#2) : #3 $=$ #4 \vspace{2pt}}
+
+\newcommand{\smallLang}[1]{
+	\setlength\topsep{1pt}
+	\setlength\parskip{1pt}
+	\texttt{#1}
+}
+
+\newcommand{\renombre}[2]{\texttt{#1 es #2}}
+
+\newenvironment{modulo}[2]{
+	\paragraph{} \vspace*{-4mm}
+	\newcommand{\var}[2]{##1 : ##2}
+
+	\vspace{1ex}
+	\texttt{Modulo} \textit{#1} \texttt{implementa} \textit{#2} $\{$
+	\par
+	\tocarEspacios
+}
+{
+
+\hspace{2.5mm} $\}$
+\vspace{2ex}
+}
+
+\newcommand{\tab}{\hspace*{4mm}}
+
+\newcommand{\state}[1]{
+	\setlength\topsep{1pt}
+	\setlength\parskip{1pt}
+	{$\{$ #1 $\}$}
+}
+
+\newcommand{\centrado}[1]{
+	\setlength\topsep{1pt}
+	\setlength\parskip{1pt}
+	\begin{center}
+		{#1}
+	\end{center}
+}
+
+
+\renewcommand{\lstlistingname}{Código}
+\lstset{% general command to set parameter(s)
+	language=Java,
+	morekeywords={endif, endwhile, skip},
+	basewidth={0.47em,0.40em},
+	columns=fixed, fontadjust, resetmargins, xrightmargin=5pt, xleftmargin=15pt,
+	flexiblecolumns=false, tabsize=4, breaklines, breakatwhitespace=false, extendedchars=true,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=9pt,
+	frame=l, framesep=3pt,
+	captionpos=b,
+}
+
+\newcommand{\arbol}[1]{\begin{tikzpicture}[every node/.style={circle, draw=black}, subArbol/.style={regular polygon, regular polygon sides=3}, tips=false]
+\graph[binary tree layout]{#1};
+\end{tikzpicture}}
+
+\newcommand{\arbolCentrado}[1]{\begin{center} \arbol{#1} \end{center}}
+
+
+\newcommand{\variable}[3][]{#1$#2:$ #3}
+
+\newcommand{\nat}{$\mathbb{N}$}
+\newcommand{\ent}{$\mathbb{Z}$}
+\newcommand{\float}{$\mathbb{R}$}
+\newcommand{\bool}{$Bool$}
+\newcommand{\cha}{$Char$}
+\newcommand{\str}{$String$}
+
+\newcommand{\indiceValido}[2][i]{$0 \leq #1 < |#2|$}
+
+\newcommand{\paraTodoIndiceValido}[2][i]{$($\variable[$\forall$]{#1}{\ent}$)($\indiceValido[#1]{#2}}
+
+\newcommand{\existeIndiceValido}[2][i]{$($\variable[$\exists$]{#1}{\ent}$)($\indiceValido[#1]{#2}}
+
+\newcommand{\formula}[1]{$#1$}
+
+\newcommand{\TLista}[1]{$seq \langle$#1$\rangle$}
+\newcommand{\lista}[1]{$\langle$#1$\rangle$}
+\newcommand{\head}[1]{\textit{head}(#1)}
+\newcommand{\tail}[1]{\textit{tail}(#1)}
+\newcommand{\addFirst}[2]{\textit{addFirst}(#1, #2)}
+\newcommand{\subseq}[3]{\textit{subseq}(#1, #2, #3)}
+\newcommand{\setAt}[3]{\textit{setAt}(#1, #2, #3)}
+
+\newcommand{\set}[1]{$\{$#1$\}$}
+\newcommand{\TConj}[1]{\formula{conj < #1 >}}
+
+\newcommand{\TDict}[2]{\formula{dict < #1, #2 >}}
+
+\newcommand{\TArray}[1]{\texttt{array[#1]}}
+
+\newcommand{\True}{$True$}
+\newcommand{\False}{$False$}
+\newcommand{\Then}{$\rightarrow$}
+\newcommand{\Iff}{$\longleftrightarrow$}
+\newcommand{\implica}{\longrightarrow}
+\newcommand{\IfThenElse}[3]{\texttt{if } #1 \texttt{ then } #2 \texttt{ else } #3 \texttt{ fi}}
+\newcommand{\yLuego}{\land_{L}}
+\newcommand{\oLuego}{$\lor_{L}$}
+\newcommand{\implicaLuego}{$\longrightarrow_{L}$}
+
+\newcommand{\enum}[2]{\texttt{enum} \textit{#1}$\{$#2$\}$}
+
+\newcommand{\triplaDeHoare}[3]{\{#1\} \texttt{ #2 } \{#3\}}
+
+\newcommand{\ejercicio}[2]{\paragraph{Ejercicio #1.} #2}
+\newcommand{\respuesta}[1]{\begin{snugshade*}#1\end{snugshade*}}

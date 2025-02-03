@@ -8,7 +8,7 @@ Un pequeño apunte que fui armando a lo largo de mi cursada. A pedido de los alu
 
 El apunte nunca fue pensado desde un principio como un libro comunitario y publico, por lo que la organizacion del proyecto es completamente nula. El libro como tal (salvo algunas funciones que fueron surgiendo a medida que lo armaba) esta en un solo archivo .tex. Esto es una MALA PRACTICA y no deberia hacerse. En fin, actualizar bajo su propio criterio.
 
-# Nota del autor
+# Contribuciones
 
 Si contribuis al proyecto, ponete en la portada como editor, contribuyente, corrector, o lo que te guste. De paso vemos como va creciendo esto.
 
